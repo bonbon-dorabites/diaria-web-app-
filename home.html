@@ -42,6 +42,9 @@
                 justify-content: center;
                 text-align: center;
             }
+            .welcome {
+                font-size: 8vh;
+            }
         }
         
     </style>
@@ -52,7 +55,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark nav-bar">   
             <div class="container-fluid">
-                <a class="navbar-brand" href="#home">
+                <a id="logo-link"  class="navbar-brand" href="#home">
                     <img src="logo.png" alt="logo for diaria website" width="60" height="60" class="d-inline-block align-text-center logo-navbar">
                     Diaria
                 </a>
@@ -69,7 +72,7 @@
             </div>
         </nav>
     </header>
-
+    
     <section>
         <div id="floating-icons" class="sticky-bottom">
             <div class="icon" id="icon1">
@@ -95,9 +98,6 @@
         <div id="window1" class="window">
             <h1 class="text-center heading" style="font-weight:bold;"><br>Profile Section</h1>
             <p class="text-center subheading">This is your profile page. You can manage your personal information here.</p>
-            <div class="mb-3 ">
-                
-            </div>
             <form id="signupForm" class="formtable mt-5">
                 <div class="mb-3 form-title">
                     <a href="signup.html" class="mb-3 btn btn-primary" target="_blank" style="background-color: #180615dc;">Click here to edit Details</a>
@@ -129,24 +129,31 @@
             </form>
             <br><br><br><br>
         </div>        
-            <div id="window2" class="window">
-                <div class="align-items-center justify-content-center title">
-                    <h1>Make your story!</h1>
-                </div>
-                
-                <div class="journal-container">
-                    <div class="calendar">
-                        <input type="date" id="journal-date" />
-                    </div>
-                    <div class="journal-entry">
-                        <textarea id="journal-text" placeholder="Write your journal entry here..."></textarea>
-                    </div>
-                </div> <br>
-                <div class="save-btn">
-                    <button id="save-journal" type="button">Save Diary Entry</button>
-                </div>;
+        <div id="window2" class="window">
+            <div class="align-items-center justify-content-center title">
+                <h1>Make your story!</h1>
             </div>
-            <div id="window3" class="window">Window 3: Nature Content</div>
+            
+            <div class="journal-container">
+                <div class="calendar">
+                    <input type="date" id="journal-date" />
+                </div>
+                <div class="journal-entry">
+                    <textarea id="journal-text" placeholder="Write your journal entry here..."></textarea>
+                </div>
+            </div> <br>
+            <div class="save-btn">
+                <button id="save-journal" type="button">Save Diary Entry</button>
+            </div>;
+        </div>
+        <div id="window3" class="window">Window 3: Nature Content</div>
+            
+
+        <div id="welcome" class=" front window active">
+            <h1 class="welcome text-center">Kachow <span id="firstName"> </span></h1>
+            <hr class="custom">
+            <h5 class="text-center" style="font-style: italic;">Ad Astra Abyssosque</h5>
+        </div>
     </section>
 </body>
 </html>

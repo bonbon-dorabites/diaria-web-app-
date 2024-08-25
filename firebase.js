@@ -51,6 +51,7 @@ async function fetchUserData(uid) {
             document.getElementById("bday").value = userData.birthday || '';
             document.getElementById("old").value = userData.age || '';
             document.getElementById("acc").value = userData.email || '';
+            document.getElementById("firstName").textContent = (userData.firstName || '').split(' ')[0]+'!';
         } else {
             console.log("No matching documents found!");
         }

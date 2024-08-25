@@ -142,7 +142,6 @@ hr.custom {
     font-size: 16px;
     font-weight: bold;
     line-height: 24px;
-    background-color: #180615dc; /* Highlight active icon */
 }
 
 .hero-img {
@@ -233,10 +232,21 @@ hr.custom {
     color: white;
 }
 
+.front {
+    height: 100vh;
+    align-content: center;
+}
+
+.welcome {
+    font-size: 10vh;
+    font-weight: 900;
+}
+
+
 /* Windows to display */
 .window {
     display: none;  
-    height: 100vh;
+    height: 100vh; text-align: center;
     align-content: center;
     background-color: lightgrey;
     margin-bottom: 100px;
