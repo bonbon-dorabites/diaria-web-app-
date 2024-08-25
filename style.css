@@ -1,0 +1,297 @@
+/* General Styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: "Rubik", sans-serif;
+}
+
+.account-page, .division {
+    height: 100%;
+    margin: 0;
+}
+
+.division {
+    display: flex;
+}
+
+.logo {
+    background-color: #180615dc;
+    padding: 0; /* Remove padding to avoid extra space */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.right {
+    background-color: #ccc;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box; /* Include padding in height calculation */
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
+
+/* Title and Subtitle */
+.title {
+    font-size: 48px; /* Adjust as needed */
+    margin-bottom: 16px; /* Space below title */
+    text-align: center; /* Center-align text */
+}
+
+.subtitle {
+    font-size: 20px; /* Adjust as needed */
+    margin-bottom: 15px; /* Space below subtitle */
+    text-align: center; /* Center-align text */
+}
+
+/* Forgot Password */
+.forgotpass {
+    text-align: right;
+    margin-bottom: 10px; /* Space between link and form */
+}
+
+.forgotpass a {
+    color: inherit; /* Use current text color */
+    text-decoration: none; /* Remove underline */
+    font-style: italic;
+}
+
+.forgotpass a:hover {
+    text-decoration: underline; /* Optional: add underline on hover */
+}
+
+.redirect {
+    text-align: center;
+    margin-bottom: 10px; /* Space between link and form */
+}
+
+.redirect a {
+    color: inherit; /* Use current text color */
+    text-decoration: none; /* Remove underline */
+    font-style: italic;
+}
+
+.redirect a:hover {
+    text-decoration: underline; /* Optional: add underline on hover */
+}
+
+/* Form Styling */
+.form-table {
+    width: 100%;
+}
+
+/* CSS Style for Homepage*/
+
+.homepage {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: "Rubik", sans-serif;
+}
+
+.nav-bar {
+    background-color: #180615dc;
+    font-weight: bold;
+}
+
+.logo-navbar {
+    margin-left: 30px;
+}
+
+
+section.hero {
+    background-color: #290c24dc;
+    border-radius: 0 0 200px 200px;
+}
+
+section.hero .banner {
+    font-weight: bold;
+    font-size: 40px;
+    color: white;
+}
+
+.banner {
+    padding-top: 15px;
+}
+
+.buttons {
+    padding-top: 5vh;
+} 
+
+hr.custom {
+    width: 25%;  /* Length of the line */
+    height: 4px;  /* Thickness of the line */
+    background-color: #290c24dc;  /* Color of the line */
+    border: none;  /* Remove default border */
+    margin-left: auto;  /* Center the line */
+    margin-right: auto;  /* Center the line */
+}
+
+.description {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.buttons .btn {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 24px;
+}
+
+.hero-img {
+    width: 100%;
+}
+
+.aboutapp {
+    background-color: #f7f7edc4;
+}
+
+.about {
+    font-family: "Rubik", sans-serif;
+    font-size: 30px;
+}
+
+.description {
+    text-align: justify;
+    padding: 15px;
+    font-size: 15px;
+}
+
+.contact, .contact-page {
+    font-family: "Rubik", sans-serif;
+    width: 100%;
+}
+
+.contact-logo {
+    justify-content: left;
+    align-items: left;
+    width: 100px;
+}
+
+.logo-col {
+    justify-content: left;
+    align-items: left;
+    padding-bottom: 40px;
+    padding-top: 40px;
+}
+
+.logo-desc {
+    font-size: 13px;
+    line-height: 1;
+}
+
+.foot {
+    background-color: #180615dc;
+    color: aliceblue;
+    font-size: 13px;
+}
+
+.menu {
+    height: 100vh;
+    background-color:lightgrey;
+}
+
+#floating-icons {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    background-color: #180615dc; /* Highlight active icon */
+    align-items: center;
+    border-radius: 50px;
+    padding: 10px;
+}
+
+/* Each icon */
+.icon {
+    background-color: inherit;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.5s ease-in-out;
+    margin: 0 15px; /* Spacing between icons */
+    font-size: 24px;
+}
+
+/* When active, icon moves up */
+.icon.active {
+    transform: translateY(-40px);
+    background-color: palevioletred;
+    color: white;
+}
+
+/* Windows to display */
+.window {
+    display: none;  
+    height: 100vh;
+    text-align: center;
+    align-content: center;
+    background-color: lightgrey;
+}
+
+
+.window.active {
+    display: block; /* Show active window */
+}
+
+.formtable {
+    margin: 0 auto;
+    width: 75vw;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.content {
+    padding-top: 30px;
+    align-items: center;
+    font-family: "Rubik", sans-serif;
+}
+
+.calendar, .journal-container {
+    padding-bottom: 20px;
+}
+
+#journal-date {
+    width: 75%;
+}
+
+#journal-text {
+    width: 75%;
+    height: 100vh;
+}
+
+.save-btn {
+    padding-bottom: 30vh;
+}
+
+#save-journal {
+    width: 50%;
+    border-radius: 40px;
+}
+
+.ch-pass {
+    text-align: right;
+}
+
+.ch-pass a {
+    color: inherit; /* Use current text color */
+    text-decoration: none; /* Remove underline */
+    font-style: italic;
+}
+
+.ch-pass a:hover {
+    text-decoration: underline; /* Optional: add underline on hover */
+}
