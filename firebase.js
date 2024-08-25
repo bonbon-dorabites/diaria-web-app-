@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.13/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, getDocs, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13/firebase-firestore.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -259,3 +259,65 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Monitor auth state
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        console.log("User logged in:", user.uid);
+        const userId = user.uid;
+
+        // Reference to the user's document where the UID is stored
+        // Update this to the actual path of the document where the UID is stored
+        const userDocRef = doc(db, "users", userId);
+
+        try {
+            // Check if the user document exists
+            const userDocSnapshot = await getDoc(userDocRef);
+
+            console.log("User document exists.");
+
+            // Event listener for the Save button
+            document.getElementById("save-journal").addEventListener("click", async () => {
+                const journalDate = document.getElementById("journal-date").value;
+                const journalContent = document.getElementById("journal-text").value;
+
+                // Validate that the date is selected
+                if (!journalDate) {
+                    alert("Please select a date.");
+                    return;
+                }
+
+                try {
+                    // Reference to the subcollection 'diaryEntries' under the user's document
+                    const diaryEntryRef = doc(collection(userDocRef, "diaryEntries"), journalDate);
+
+                    console.log("Diary entry reference:", diaryEntryRef);
+
+                    // Check if the diary entry for the given date already exists
+                    const docSnapshot = await getDoc(diaryEntryRef);
+                    console.log("Document snapshot:", docSnapshot.exists());
+
+                    if (docSnapshot.exists()) {
+                        alert("An entry already exists for this date.");
+                        console.log("Entry already exists:", docSnapshot.data());
+                    } else {
+                        // Create a new diary entry under the 'diaryEntries' subcollection of the user document
+                        await setDoc(diaryEntryRef, {
+                            content: journalContent,
+                            timestamp: new Date()
+                        });
+                        alert("Diary entry saved successfully!");
+                        console.log("New diary entry saved:", { content: journalContent, timestamp: new Date() });
+                    }
+                } catch (error) {
+                    console.error("Error saving diary entry:", error);
+                    alert("Failed to save diary entry.");
+                }
+            });
+        } catch (error) {
+            console.error("Error retrieving user document:", error);
+        }
+    } else {
+        console.log("No user is logged in.");
+        alert("Please log in to save a diary entry.");
+    }
+});
