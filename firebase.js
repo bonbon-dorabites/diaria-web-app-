@@ -30,7 +30,6 @@ onAuthStateChanged(auth, async (user) => {
         }
     } else {
         console.log("No authenticated user");
-        alert("No account.");
     }
 });
 

@@ -142,6 +142,7 @@ hr.custom {
     font-size: 16px;
     font-weight: bold;
     line-height: 24px;
+    background-color: #180615dc; /* Highlight active icon */
 }
 
 .hero-img {
@@ -199,7 +200,7 @@ hr.custom {
 
 #floating-icons {
     position: fixed;
-    bottom: 50px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -220,9 +221,9 @@ hr.custom {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    border-top: 20px;
     transition: transform 0.5s ease-in-out;
     margin: 0 15px; /* Spacing between icons */
-    font-size: 24px;
 }
 
 /* When active, icon moves up */
@@ -236,11 +237,10 @@ hr.custom {
 .window {
     display: none;  
     height: 100vh;
-    text-align: center;
     align-content: center;
     background-color: lightgrey;
+    margin-bottom: 100px;
 }
-
 
 .window.active {
     display: block; /* Show active window */
@@ -248,10 +248,16 @@ hr.custom {
 
 .formtable {
     margin: 0 auto;
-    width: 75vw;
+    width: 50vw;
     align-items: center;
     justify-content: center;
     text-align: center;
+}
+
+.form-title {
+    text-align: left;
+    font-weight: bold;
+    font-size: 16px;
 }
 
 .content {
