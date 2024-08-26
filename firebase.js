@@ -26,7 +26,7 @@ onAuthStateChanged(auth, async (user) => {
         try {
             await fetchUserData(uid);
         } catch (error) {
-            console.error("Error fetching user data: ", error);
+            console.error("Error fetching user data1: 5", error);
         }
     } else {
         console.log("No authenticated user");
@@ -56,7 +56,7 @@ async function fetchUserData(uid) {
             console.log("No matching documents found!");
         }
     } catch (error) {
-        console.error("Error fetching user data: ", error);
+        console.error("Error fetching user data2: ", error);
     }
 }
 // Helper function to validate email format
@@ -339,14 +339,58 @@ function getCurrentUserId() {
 document.addEventListener('DOMContentLoaded', async function() {
     const diaryContainer = document.getElementById('diaryContainer');
     
+    const calendarSearchContainer = document.createElement('div');
+    calendarSearchContainer.className = 'calendar-search-container';
+    calendarSearchContainer.innerHTML = `
+        <div class="calendar-container">
+            <img src="path/to/calendar-icon.png" class="calendar-icon" alt="Calendar">
+        </div>
+        <div class="search-container">
+            <img src="path/to/search-icon.png" class="search-icon" alt="Search">
+        </div>
+        <div class="calendar-popup" style="display: none;">
+            <input type="date" id="calendarInput" class="calendar-input">
+        </div>
+    `;
+    diaryContainer.parentElement.insertBefore(calendarSearchContainer, diaryContainer);
+
+    // Toggle calendar popup visibility when the calendar icon is clicked
+    const calendarIcon = calendarSearchContainer.querySelector('.calendar-icon');
+    const calendarPopup = calendarSearchContainer.querySelector('.calendar-popup');
+
+    calendarIcon.addEventListener('click', function() {
+        if (calendarPopup.style.display === 'none') {
+            calendarPopup.style.display = 'block'; // Show the calendar
+        } else {
+            calendarPopup.style.display = 'none'; // Hide the calendar
+        }
+    });
+
+    // Add event listener to detect date change in calendar
+    const calendarInput = document.getElementById('calendarInput');
+    calendarInput.addEventListener('change', function() {
+        const selectedDate = calendarInput.value;
+        console.log('Selected date:', selectedDate);
+        // You can now fetch diary entries for the selected date and display them
+        // fetchDiaryEntriesForDate(selectedDate);
+    });
     try {
         // Get the current logged-in user's UID
-        const userId = await getCurrentUserId(); // Make sure this function is properly defined
+        const userId = await getCurrentUserId();
         const diaryEntries = await fetchAllDiaryEntries(userId);
-        displayDiaryEntries(diaryEntries);
+        
+        // Check if there are diary entries
+        if (diaryEntries && Object.keys(diaryEntries).length > 0) {
+            displayDiaryEntries(diaryEntries); // Pass the diaryEntries to the function
+            calendarSearchContainer.style.display = 'flex'; // Show calendar and search icon
+        } else {
+            diaryContainer.innerHTML = `<p>Oops! No diary entries found.</p>`;
+            calendarSearchContainer.style.display = 'none'; // Hide calendar and search icon
+        }
     } catch (error) {
         console.error('Error fetching diary entries or user data:', error);
         diaryContainer.innerHTML = `<p>Error fetching diary entries or user data.</p>`;
+        calendarSearchContainer.style.display = 'none'; // Hide calendar and search icon
     }
 
     // Function to fetch diary entries from Firestore
@@ -355,14 +399,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             const diaryEntriesRef = collection(db, 'users', userId, 'diaryEntries');
             const diaryEntriesSnap = await getDocs(diaryEntriesRef);
 
-            // If there are no diary entries
             if (diaryEntriesSnap.empty) {
                 console.log('Oops! No diary entries found.');
-                diaryContainer.innerHTML = `<p>Oops! No diary entries found.</p>`;
-                return [];
+                return {}; // Return an empty object if no entries found
             }
 
-            // Collect entries and group them by year and month
             const entries = {};
             diaryEntriesSnap.forEach(doc => {
                 const data = doc.data();
@@ -371,18 +412,16 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const month = entryDate.getMonth() + 1; // Months are 0-based, so add 1
                 const day = entryDate.getDate();
 
-                // Initialize year and month if not present
                 if (!entries[year]) entries[year] = {};
                 if (!entries[year][month]) entries[year][month] = [];
 
-                // Push the day and content to the month's array
                 entries[year][month].push({
                     day: day,
                     content: data.content || 'No content available'
                 });
             });
 
-            return entries; // Return structured data grouped by year and month
+            return entries;
         } catch (error) {
             console.error('Error fetching diary entries:', error);
             throw error;
@@ -393,13 +432,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     function displayDiaryEntries(entries) {
         diaryContainer.innerHTML = ''; // Clear existing entries
 
-        // If no entries, show message
         if (!entries || Object.keys(entries).length === 0) {
             diaryContainer.innerHTML = `<p>No diary entries found.</p>`;
             return;
         }
 
-        // Sort years in descending order
         const years = Object.keys(entries).sort((a, b) => b - a);
 
         years.forEach(year => {
@@ -408,7 +445,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             yearDiv.innerHTML = `<h2>${year}</h2>`;
             diaryContainer.appendChild(yearDiv);
 
-            // Sort months in descending order
             const months = Object.keys(entries[year]).sort((a, b) => b - a);
 
             months.forEach(month => {
@@ -417,7 +453,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 monthDiv.innerHTML = `<h3>${getMonthName(month)} ${year}</h3>`;
                 diaryContainer.appendChild(monthDiv);
 
-                // Sort days in ascending order
                 const days = entries[year][month].sort((a, b) => a.day - b.day);
 
                 days.forEach(entry => {
@@ -457,3 +492,4 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 });
+

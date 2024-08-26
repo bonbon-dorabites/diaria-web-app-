@@ -327,9 +327,8 @@ hr.custom {
 }
 
 .month {
-    margin-left: 20px;
     margin-bottom: 10px;
-    text-align: center; /* Center text */
+    text-align: left; /* Center text */
 }
 
 .entry-box {
@@ -375,4 +374,35 @@ hr.custom {
 
 .details-date {
     padding-right: 5vw;
+}
+
+.calendar-search-container {
+    display: flex;
+    justify-content: space-between; /* Space between calendar and search icon */
+    align-items: center;
+    margin-bottom: 20px; /* Space between the calendar/search and the diary entries */
+    width: 100%;
+    display: none; /* Hide initially */
+}
+
+/* Style for calendar icon */
+.calendar-container {
+    flex: 1;
+    text-align: center; /* Center calendar icon */
+}
+
+.calendar-icon {
+    width: 40px; /* Adjust as needed */
+    height: auto;
+}
+
+/* Style for search icon */
+.search-container {
+    flex: 1;
+    text-align: center; /* Center search icon */
+}
+
+.search-icon {
+    width: 30px; /* Adjust as needed */
+    height: auto;
 }
