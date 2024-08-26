@@ -321,3 +321,112 @@ onAuthStateChanged(auth, async (user) => {
         alert("Please log in to save a diary entry.");
     }
 });
+
+// Function to get the current logged-in user ID
+function getCurrentUserId() {
+    return new Promise((resolve, reject) => {
+        const auth = getAuth();
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                resolve(user.uid); // Return the user's UID
+            } else {
+                reject('No user is logged in');
+            }
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    const diaryContainer = document.getElementById('diaryContainer');
+    
+    try {
+        // Get the current logged-in user's UID
+        const userId = await getCurrentUserId();
+        const diaryEntries = await fetchAllDiaryEntries(userId);
+        displayDiaryEntries(diaryEntries);
+    } catch (error) {
+        console.error('Error fetching diary entries or user data:', error);
+    }
+
+    // Fetch all diary entries for the logged-in user
+    async function fetchAllDiaryEntries(userId) {
+        const diaryEntriesRef = collection(db, 'users', userId, 'diaryEntries');
+        const diaryEntriesSnap = await getDocs(diaryEntriesRef);
+
+        if (diaryEntriesSnap.empty) {
+            console.log('No diary entries found.');
+            return [];
+        }
+
+        // Collect entries and group them by year and month
+        const entries = {};
+        diaryEntriesSnap.forEach(doc => {
+            const data = doc.data();
+            const entryDate = new Date(doc.id); // Assuming the document ID is the date
+            const year = entryDate.getFullYear();
+            const month = entryDate.getMonth() + 1; // Months are 0-based, so add 1
+            const day = entryDate.getDate();
+
+            // Initialize year and month if not present
+            if (!entries[year]) entries[year] = {};
+            if (!entries[year][month]) entries[year][month] = [];
+
+            // Push the day and content to the month's array
+            entries[year][month].push({
+                day: day,
+                content: data.content
+            });
+        });
+
+        return entries; // Return structured data grouped by year and month
+    }
+
+    // Display all diary entries grouped by year and month
+    function displayDiaryEntries(entries) {
+        diaryContainer.innerHTML = ''; // Clear existing entries
+
+        // Sort years in descending order
+        const years = Object.keys(entries).sort((a, b) => b - a);
+
+        years.forEach(year => {
+            const yearDiv = document.createElement('div');
+            yearDiv.classList.add('year');
+            yearDiv.innerHTML = `<h2>${year}</h2>`;
+            diaryContainer.appendChild(yearDiv);
+
+            // Sort months in descending order
+            const months = Object.keys(entries[year]).sort((a, b) => b - a);
+
+            months.forEach(month => {
+                const monthDiv = document.createElement('div');
+                monthDiv.classList.add('month');
+                monthDiv.innerHTML = `<h3>${getMonthName(month)} ${year}</h3>`;
+                diaryContainer.appendChild(monthDiv);
+
+                // Sort days in ascending order
+                const days = entries[year][month].sort((a, b) => a.day - b.day);
+
+                days.forEach(entry => {
+                    const entryDiv = document.createElement('div');
+                    entryDiv.classList.add('entry-box');
+                    entryDiv.innerHTML = `
+                        <div class="entry">
+                            <span class="details-date">${year}-${month.toString().padStart(2, '0')}-${entry.day.toString().padStart(2, '0')}</span>
+                            <button class="ms-auto mx-4 details-btn">Details</button>
+                        </div>
+                    `;
+                    monthDiv.appendChild(entryDiv);
+                });
+            });
+        });
+    }
+
+    // Utility to get month name from number
+    function getMonthName(monthNumber) {
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        return monthNames[monthNumber - 1];
+    }
+});

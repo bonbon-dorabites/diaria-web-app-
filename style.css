@@ -311,3 +311,43 @@ hr.custom {
 .ch-pass a:hover {
     text-decoration: underline; /* Optional: add underline on hover */
 }
+
+#diaryContainer {
+    padding: 20px;
+}
+
+.year {
+    margin-bottom: 20px;
+}
+
+.month {
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+.entry-box {
+    display: flex;
+    padding: 10px;
+    width: 30vw;
+    margin-left: 5vw;
+    margin-right: 10vw;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    background-color: #f9f9f9;
+}
+
+.details-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.details-btn:hover {
+    background-color: #0056b3;
+}
+
+.details-date {
+    padding-right: 10vw;
+}
