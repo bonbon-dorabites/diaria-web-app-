@@ -246,7 +246,8 @@ hr.custom {
 /* Windows to display */
 .window {
     display: none;  
-    height: 100vh; text-align: center;
+    height: 100vh; 
+    text-align: center;
     align-content: center;
     background-color: lightgrey;
     margin-bottom: 100px;
@@ -314,26 +315,50 @@ hr.custom {
 
 #diaryContainer {
     padding: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers the entire container content horizontally */
 }
 
 .year {
     margin-bottom: 20px;
+    text-align: center; /* Center text */
 }
 
 .month {
     margin-left: 20px;
     margin-bottom: 10px;
+    text-align: center; /* Center text */
 }
 
 .entry-box {
     display: flex;
+    justify-content: space-between; /* Adds space between the date and button */
+    align-items: center; /* Vertically centers the content within the box */
     padding: 10px;
-    width: 30vw;
-    margin-left: 5vw;
-    margin-right: 10vw;
+    width: 50vw;
+    margin: 5px 5vw;
     border: 1px solid #ccc;
-    margin-top: 5px;
     background-color: #f9f9f9;
+}
+
+.entry {
+    flex-grow: 1; /* Ensures the entry takes up available space */
+    display: flex;
+    align-items: center;
+}
+
+.details-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.details-btn:hover {
+    background-color: #0056b3;
 }
 
 .details-btn {
@@ -349,5 +374,5 @@ hr.custom {
 }
 
 .details-date {
-    padding-right: 10vw;
+    padding-right: 5vw;
 }
