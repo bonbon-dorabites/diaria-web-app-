@@ -341,49 +341,63 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     try {
         // Get the current logged-in user's UID
-        const userId = await getCurrentUserId();
+        const userId = await getCurrentUserId(); // Make sure this function is properly defined
         const diaryEntries = await fetchAllDiaryEntries(userId);
         displayDiaryEntries(diaryEntries);
     } catch (error) {
         console.error('Error fetching diary entries or user data:', error);
+        diaryContainer.innerHTML = `<p>Error fetching diary entries or user data.</p>`;
     }
 
-    // Fetch all diary entries for the logged-in user
+    // Function to fetch diary entries from Firestore
     async function fetchAllDiaryEntries(userId) {
-        const diaryEntriesRef = collection(db, 'users', userId, 'diaryEntries');
-        const diaryEntriesSnap = await getDocs(diaryEntriesRef);
+        try {
+            const diaryEntriesRef = collection(db, 'users', userId, 'diaryEntries');
+            const diaryEntriesSnap = await getDocs(diaryEntriesRef);
 
-        if (diaryEntriesSnap.empty) {
-            console.log('No diary entries found.');
-            return [];
-        }
+            // If there are no diary entries
+            if (diaryEntriesSnap.empty) {
+                console.log('Oops! No diary entries found.');
+                diaryContainer.innerHTML = `<p>Oops! No diary entries found.</p>`;
+                return [];
+            }
 
-        // Collect entries and group them by year and month
-        const entries = {};
-        diaryEntriesSnap.forEach(doc => {
-            const data = doc.data();
-            const entryDate = new Date(doc.id); // Assuming the document ID is the date
-            const year = entryDate.getFullYear();
-            const month = entryDate.getMonth() + 1; // Months are 0-based, so add 1
-            const day = entryDate.getDate();
+            // Collect entries and group them by year and month
+            const entries = {};
+            diaryEntriesSnap.forEach(doc => {
+                const data = doc.data();
+                const entryDate = new Date(doc.id); // Assuming the document ID is the date
+                const year = entryDate.getFullYear();
+                const month = entryDate.getMonth() + 1; // Months are 0-based, so add 1
+                const day = entryDate.getDate();
 
-            // Initialize year and month if not present
-            if (!entries[year]) entries[year] = {};
-            if (!entries[year][month]) entries[year][month] = [];
+                // Initialize year and month if not present
+                if (!entries[year]) entries[year] = {};
+                if (!entries[year][month]) entries[year][month] = [];
 
-            // Push the day and content to the month's array
-            entries[year][month].push({
-                day: day,
-                content: data.content
+                // Push the day and content to the month's array
+                entries[year][month].push({
+                    day: day,
+                    content: data.content || 'No content available'
+                });
             });
-        });
 
-        return entries; // Return structured data grouped by year and month
+            return entries; // Return structured data grouped by year and month
+        } catch (error) {
+            console.error('Error fetching diary entries:', error);
+            throw error;
+        }
     }
 
-    // Display all diary entries grouped by year and month
+    // Function to display diary entries grouped by year and month
     function displayDiaryEntries(entries) {
         diaryContainer.innerHTML = ''; // Clear existing entries
+
+        // If no entries, show message
+        if (!entries || Object.keys(entries).length === 0) {
+            diaryContainer.innerHTML = `<p>No diary entries found.</p>`;
+            return;
+        }
 
         // Sort years in descending order
         const years = Object.keys(entries).sort((a, b) => b - a);
@@ -428,5 +442,18 @@ document.addEventListener('DOMContentLoaded', async function() {
             'July', 'August', 'September', 'October', 'November', 'December'
         ];
         return monthNames[monthNumber - 1];
+    }
+
+    // Placeholder function to get the current logged-in user's UID
+    async function getCurrentUserId() {
+        return new Promise((resolve, reject) => {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    resolve(user.uid);
+                } else {
+                    reject('No user is signed in.');
+                }
+            });
+        });
     }
 });
