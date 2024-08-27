@@ -260,6 +260,7 @@ hr.year {
     align-content: center;
     background-color: lightgrey;
     margin-bottom: 100px;
+    font-family: "Rubik", sans-serif;
 }
 
 .window.active {
