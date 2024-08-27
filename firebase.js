@@ -306,6 +306,7 @@ onAuthStateChanged(auth, async (user) => {
                             timestamp: new Date()
                         });
                         alert("Diary entry saved successfully!");
+                        document.getElementById('journal-date').value = ''; // Reset the value
                         console.log("New diary entry saved:", { content: journalContent, timestamp: new Date() });
                     }
                 } catch (error) {
