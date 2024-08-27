@@ -426,6 +426,15 @@ document.addEventListener('DOMContentLoaded', async function() {
                     `;
                     diaryContainer.appendChild(entryDiv);
                 });
+                
+                // Add "Display All" button
+                const displayAllButton = document.createElement('button');
+                displayAllButton.classList.add('display-all-btn');
+                displayAllButton.textContent = 'Display All';
+                displayAllButton.addEventListener('click', function() {
+                    displayDiaryEntries(entries); // Redisplay all diary entries
+                });
+                diaryContainer.appendChild(displayAllButton);
             } else {
                 diaryContainer.innerHTML = `<p>No diary entries found for ${selectedDate}.</p>`;
             }
@@ -484,7 +493,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         years.forEach(year => {
             const yearDiv = document.createElement('div');
             yearDiv.classList.add('year');
-            yearDiv.innerHTML = `<h2>${year}</h2>`;
+            yearDiv.innerHTML = `<h2>${year}</h2> <hr class="year">`;
             diaryContainer.appendChild(yearDiv);
 
             const months = Object.keys(entries[year]).sort((a, b) => b - a);

@@ -133,6 +133,15 @@ hr.custom {
     margin-right: auto;  /* Center the line */
 }
 
+hr.year {
+    width: 100%;  /* Length of the line */
+    height: 4px;  /* Thickness of the line */
+    background-color: #290c24dc;  /* Color of the line */
+    border: none;  /* Remove default border */
+    margin-left: auto;  /* Center the line */
+    margin-right: auto;  /* Center the line */
+}
+
 .description {
     padding-top: 30px;
     padding-bottom: 30px;
@@ -422,4 +431,20 @@ hr.custom {
 /* Optional styles */
 .calendar-search-container svg {
     margin-right: 8px; /* Adds spacing between icons */
+}
+
+.display-all-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.display-all-btn:hover {
+    background-color: #0056b3;
 }
