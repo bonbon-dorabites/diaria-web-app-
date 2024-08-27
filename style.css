@@ -306,6 +306,7 @@ hr.year {
 }
 
 #save-journal {
+    justify-content: center;
     width: 50%;
     border-radius: 40px;
 }
