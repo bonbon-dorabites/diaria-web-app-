@@ -338,21 +338,29 @@ function getCurrentUserId() {
 
 document.addEventListener('DOMContentLoaded', async function() {
     const diaryContainer = document.getElementById('diaryContainer');
-    
     const calendarSearchContainer = document.createElement('div');
     calendarSearchContainer.className = 'calendar-search-container';
     calendarSearchContainer.innerHTML = `
-        <div class="calendar-container">
-            <img src="path/to/calendar-icon.png" class="calendar-icon" alt="Calendar">
+        <div class="calendar-container container-fluid justify-content-center align-items-center">
+            <!-- Calendar Logo -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-calendar calendar-icon" viewBox="0 0 16 16">
+                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+            </svg>
+            <!-- Calendar Input -->
+            <div class="calendar-popup">
+                <input type="date" id="calendarInput" class="calendar-input">
+            </div>
+            <div class="search-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-search search-icon" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg>
         </div>
-        <div class="search-container">
-            <img src="path/to/search-icon.png" class="search-icon" alt="Search">
         </div>
-        <div class="calendar-popup" style="display: none;">
-            <input type="date" id="calendarInput" class="calendar-input">
-        </div>
+        <!-- Search Icon -->
+        
     `;
     diaryContainer.parentElement.insertBefore(calendarSearchContainer, diaryContainer);
+    
 
     // Toggle calendar popup visibility when the calendar icon is clicked
     const calendarIcon = calendarSearchContainer.querySelector('.calendar-icon');

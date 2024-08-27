@@ -376,33 +376,50 @@ hr.custom {
     padding-right: 5vw;
 }
 
+/* Flexbox layout for container */
 .calendar-search-container {
     display: flex;
-    justify-content: space-between; /* Space between calendar and search icon */
     align-items: center;
-    margin-bottom: 20px; /* Space between the calendar/search and the diary entries */
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ccc;
     width: 100%;
-    display: none; /* Hide initially */
+    box-sizing: border-box;
 }
 
-/* Style for calendar icon */
+/* Style for the calendar section */
 .calendar-container {
-    flex: 1;
-    text-align: center; /* Center calendar icon */
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between icon and input */
 }
 
-.calendar-icon {
-    width: 40px; /* Adjust as needed */
-    height: auto;
+/* Hide calendar popup initially */
+.calendar-popup {
+    display: flex;
 }
 
-/* Style for search icon */
+.calendar-input {
+    padding: 5px;
+    font-size: 14px;
+}
+
+/* Style for the search section */
 .search-container {
-    flex: 1;
-    text-align: center; /* Center search icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+.calendar-icon,
 .search-icon {
-    width: 30px; /* Adjust as needed */
-    height: auto;
+    cursor: pointer;
+    fill: #000;
+    width: 24px;
+    height: 24px;
+}
+
+/* Optional styles */
+.calendar-search-container svg {
+    margin-right: 8px; /* Adds spacing between icons */
 }
