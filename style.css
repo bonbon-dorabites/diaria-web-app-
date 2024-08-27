@@ -313,14 +313,13 @@ hr.year {
     height: 100vh;
 }
 
-.save-btn {
-    padding-bottom: 30vh;
-}
-
 #save-journal {
     justify-content: center;
-    width: 50%;
     border-radius: 40px;
+    background-color: #180615dc;
+    color: white;
+    width: 25%;
+    border-radius: 20px;
 }
 
 .ch-pass {
