@@ -420,9 +420,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                     const entryDiv = document.createElement('div');
                     entryDiv.classList.add('entry-box');
                     entryDiv.innerHTML = `
-                        <div class="entry">
-                            <span class="details-date">${searchYear}-${searchMonth.toString().padStart(2, '0')}-${searchDay.toString().padStart(2, '0')}</span>
-                            <button class="ms-auto mx-4 details-btn">Details</button>
+                        <div class="entry mb-4 pb-4 pt-4 mt-4"><br><br>
+                            <span class="details-date mt-4 pt-4">${searchYear}-${searchMonth.toString().padStart(2, '0')}-${searchDay.toString().padStart(2, '0')}</span>
+                            <button class="ms-auto mx-4 details-btn mb-4">Details</button>
                         </div>
                     `;
                     diaryContainer.appendChild(entryDiv);
