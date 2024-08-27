@@ -203,7 +203,19 @@ hr.year {
 
 .menu {
     height: 100vh;
-    background-color:lightgrey;
+    background-color: burlywood;
+}
+
+#edit {
+    background-color: #180615dc;
+    color: white;
+    border-radius: 20px;
+}
+
+#publish {
+    background-color: #180615dc;
+    color: white;
+    border-radius: 20px;
 }
 
 #floating-icons {
@@ -258,7 +270,7 @@ hr.year {
     height: 100vh; 
     text-align: center;
     align-content: center;
-    background-color: lightgrey;
+    background-color:burlywood;
     margin-bottom: 100px;
     font-family: "Rubik", sans-serif;
 }

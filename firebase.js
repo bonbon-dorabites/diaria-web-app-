@@ -446,7 +446,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         document.getElementById('calendarInput').value = ''; // Reset the value
     }
-
     
     // Function to fetch diary entries from Firestore
     async function fetchAllDiaryEntries(userId) {
