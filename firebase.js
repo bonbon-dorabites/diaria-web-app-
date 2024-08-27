@@ -403,15 +403,29 @@ document.addEventListener('DOMContentLoaded', async function() {
         calendarSearchContainer.style.display = 'none';
     }
 
-    // Function to search diary entries by selected date
     function searchDiaryEntriesByDate(entries, selectedDate) {
+        const diaryContainer = document.getElementById('diaryContainer');
         diaryContainer.innerHTML = ''; // Clear existing entries
-
+    
+        // Log the entries object to inspect its structure
+        console.log('Entries Object:', entries);
+    
+        // Parse selectedDate to Date object and extract year, month, and day
         const searchDate = new Date(selectedDate);
         const searchYear = searchDate.getFullYear();
         const searchMonth = searchDate.getMonth() + 1; // Months are 0-based, so add 1
         const searchDay = searchDate.getDate();
-
+    
+        // Log parsed date values
+        console.log('Selected Date:', selectedDate);
+        console.log('Search Date:', searchDate);
+        console.log('Search Year:', searchYear);
+        console.log('Search Month:', searchMonth);
+        console.log('Search Day:', searchDay);
+    
+        // Format the date string
+        const formattedDate = `${searchYear}-${searchMonth.toString().padStart(2, '0')}-${searchDay.toString().padStart(2, '0')}`;
+    
         // Add "Display All" button
         const displayAllButton = document.createElement('button');
         displayAllButton.classList.add('display-all-btn');
@@ -419,33 +433,43 @@ document.addEventListener('DOMContentLoaded', async function() {
         displayAllButton.addEventListener('click', function() {
             displayDiaryEntries(entries); // Redisplay all diary entries
         });
-
+    
+        // Check if entries for the selected year and month exist
         if (entries[searchYear] && entries[searchYear][searchMonth]) {
             const matchingEntries = entries[searchYear][searchMonth].filter(entry => entry.day === searchDay);
-
+    
             if (matchingEntries.length > 0) {
                 matchingEntries.forEach(entry => {
                     const entryDiv = document.createElement('div');
                     entryDiv.classList.add('entry-box');
                     entryDiv.innerHTML = `
-                        <div class="entry"><br><br>
+                        <div class="entry">
                             <span class="details-date">${searchYear}-${searchMonth.toString().padStart(2, '0')}-${searchDay.toString().padStart(2, '0')}</span>
-                            <button class="details-btn">Details</button>
+                            <button class="details-btn" data-year="${searchYear}" data-month="${searchMonth}" data-day="${searchDay}">Details</button>
                         </div>
                     `;
                     diaryContainer.appendChild(entryDiv);
+    
+                    // Add details button functionality
+                    const detailsBtn = entryDiv.querySelector('.details-btn');
+                    detailsBtn.addEventListener('click', function () {
+                        displayDetails(entry, searchYear, searchMonth, searchDay); // Show details for the clicked entry
+                    });
                 });
-                diaryContainer.appendChild(displayAllButton);
             } else {
-                diaryContainer.innerHTML = `<p>No trash entries found for ${selectedDate}.</p>`;
-                diaryContainer.appendChild(displayAllButton);
+                diaryContainer.innerHTML = `<p>No entries found for ${formattedDate}.</p>`;
             }
         } else {
-            diaryContainer.innerHTML = `<p>No trash entries found for ${selectedDate}.</p>`;
-            diaryContainer.appendChild(displayAllButton);
+            diaryContainer.innerHTML = `<p>No entries found for ${formattedDate}.</p>`;
         }
+    
+        // Append the "Display All" button at the end
+        diaryContainer.appendChild(displayAllButton);
+    
+        // Reset the calendar input field
         document.getElementById('calendarInput').value = ''; // Reset the value
     }
+    
     
     // Function to fetch diary entries from Firestore
     async function fetchAllDiaryEntries(userId) {
@@ -482,47 +506,105 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
-    // Function to display diary entries grouped by year and month
+    function displayDetails(entry, year, month, day) {
+        const diaryContainer = document.getElementById('diaryContainer');
+        
+        // Clear existing content and add detailed view
+        diaryContainer.innerHTML = ''; 
+    
+        // Log each part of the entry for debugging
+        console.log('Year:', year);
+        console.log('Month:', month);
+        console.log('Day:', day);
+        console.log('Content:', entry.content);
+    
+        // Construct the entry date
+        const entryDate = year && month && day
+            ? `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
+            : 'Unknown Date';
+    
+        // Create the details view
+        const detailsDiv = document.createElement('div');
+        detailsDiv.classList.add('details-view');
+        
+        // Populate the content of the details view
+        detailsDiv.innerHTML = `
+            <h2>${entryDate}</h2>
+            <p>${entry.content || 'No content available'}</p>
+            <button class="go-back-btn">Go Back to All Entries</button>
+        `;
+        diaryContainer.appendChild(detailsDiv);
+    
+        // Add functionality to the "Go Back" button
+        const goBackBtn = detailsDiv.querySelector('.go-back-btn');
+        goBackBtn.addEventListener('click', function() {
+            displayDiaryEntries(entries); // Redisplay all entries when going back
+        });
+    }
+    
+    
     function displayDiaryEntries(entries) {
+        const diaryContainer = document.getElementById('diaryContainer');
         diaryContainer.innerHTML = ''; // Clear existing entries
-
+    
         if (!entries || Object.keys(entries).length === 0) {
             diaryContainer.innerHTML = `<p>No diary entries found.</p>`;
             return;
         }
-
+    
         const years = Object.keys(entries).sort((a, b) => b - a);
-
+    
         years.forEach(year => {
             const yearDiv = document.createElement('div');
-            yearDiv.classList.add('<hr>year');
-            yearDiv.innerHTML = `<br><br><hr class="year"><h1>${year}</h1> <hr class="year"> `;
+            yearDiv.classList.add('year');
+            yearDiv.innerHTML = `<h1>${year}</h1>`;
             diaryContainer.appendChild(yearDiv);
-
+    
             const months = Object.keys(entries[year]).sort((a, b) => b - a);
-
+    
             months.forEach(month => {
                 const monthDiv = document.createElement('div');
                 monthDiv.classList.add('month');
                 monthDiv.innerHTML = `<h3>${getMonthName(month)} ${year}</h3>`;
                 diaryContainer.appendChild(monthDiv);
-
+    
                 const days = entries[year][month].sort((a, b) => a.day - b.day);
-
+    
                 days.forEach(entry => {
                     const entryDiv = document.createElement('div');
                     entryDiv.classList.add('entry-box');
                     entryDiv.innerHTML = `
                         <div class="entry">
                             <span class="details-date">${year}-${month.toString().padStart(2, '0')}-${entry.day.toString().padStart(2, '0')}</span>
-                            <button class="details-btn">Details</button>
+                            <button class="details-btn" data-year="${year}" data-month="${month}" data-day="${entry.day}">Details</button>
                         </div>
                     `;
                     monthDiv.appendChild(entryDiv);
                 });
             });
         });
+    
+        // Add event listeners to details buttons
+        document.querySelectorAll('.details-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const year = this.getAttribute('data-year');
+                const month = this.getAttribute('data-month');
+                const day = this.getAttribute('data-day');
+    
+                console.log('Button clicked:', { year, month, day });
+    
+                const entry = entries[year]?.[month]?.find(e => e.day === parseInt(day));
+                if (entry) {
+                    displayDetails(entry, year, month, day);
+                } else {
+                    console.error('Entry not found:', { year, month, day });
+                }
+            });
+        });
     }
+    
+
+    
 
     // Utility to get month name from number
     function getMonthName(monthNumber) {
