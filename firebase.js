@@ -319,7 +319,6 @@ onAuthStateChanged(auth, async (user) => {
         }
     } else {
         console.log("No user is logged in.");
-        alert("Please log in to save a diary entry.");
     }
 }); 
 
