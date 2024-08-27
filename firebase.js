@@ -412,6 +412,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         const searchMonth = searchDate.getMonth() + 1; // Months are 0-based, so add 1
         const searchDay = searchDate.getDate();
 
+        // Add "Display All" button
+        const displayAllButton = document.createElement('button');
+        displayAllButton.classList.add('display-all-btn');
+        displayAllButton.textContent = 'Display All';
+        displayAllButton.addEventListener('click', function() {
+            displayDiaryEntries(entries); // Redisplay all diary entries
+        });
+
         if (entries[searchYear] && entries[searchYear][searchMonth]) {
             const matchingEntries = entries[searchYear][searchMonth].filter(entry => entry.day === searchDay);
 
@@ -427,20 +435,14 @@ document.addEventListener('DOMContentLoaded', async function() {
                     `;
                     diaryContainer.appendChild(entryDiv);
                 });
-
-                // Add "Display All" button
-                const displayAllButton = document.createElement('button');
-                displayAllButton.classList.add('display-all-btn');
-                displayAllButton.textContent = 'Display All';
-                displayAllButton.addEventListener('click', function() {
-                    displayDiaryEntries(entries); // Redisplay all diary entries
-                });
                 diaryContainer.appendChild(displayAllButton);
             } else {
-                diaryContainer.innerHTML = `<p>No diary entries found for ${selectedDate}.</p>`;
+                diaryContainer.innerHTML = `<p>No trash entries found for ${selectedDate}.</p>`;
+                diaryContainer.appendChild(displayAllButton);
             }
         } else {
-            diaryContainer.innerHTML = `<p>No diary entries found for ${selectedDate}.</p>`;
+            diaryContainer.innerHTML = `<p>No trash entries found for ${selectedDate}.</p>`;
+            diaryContainer.appendChild(displayAllButton);
         }
         document.getElementById('calendarInput').value = ''; // Reset the value
     }
