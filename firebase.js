@@ -307,6 +307,7 @@ onAuthStateChanged(auth, async (user) => {
                         });
                         alert("Diary entry saved successfully!");
                         document.getElementById('journal-date').value = ''; // Reset the value
+                        document.getElementById('journal-text').value = ''; // Reset the value
                         console.log("New diary entry saved:", { content: journalContent, timestamp: new Date() });
                     }
                 } catch (error) {
