@@ -337,6 +337,7 @@ function getCurrentUserId() {
 }
 
 document.addEventListener('DOMContentLoaded', async function() {
+    let entries = {}; // Globally accessible for storing diary entries
     const diaryContainer = document.getElementById('diaryContainer');
     const calendarSearchContainer = document.createElement('div');
     calendarSearchContainer.className = 'calendar-search-container';
@@ -355,49 +356,85 @@ document.addEventListener('DOMContentLoaded', async function() {
                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                 </svg>
             </div>
-        </div>=`;
+        </div>`;
     diaryContainer.parentElement.insertBefore(calendarSearchContainer, diaryContainer);
-    
 
-    // Toggle calendar popup visibility when the calendar icon is clicked
+    // Toggle calendar popup visibility
     const calendarIcon = calendarSearchContainer.querySelector('.calendar-icon');
     const calendarPopup = calendarSearchContainer.querySelector('.calendar-popup');
-
     calendarIcon.addEventListener('click', function() {
-        if (calendarPopup.style.display === 'none') {
-            calendarPopup.style.display = 'block'; // Show the calendar
-        } else {
-            calendarPopup.style.display = 'none'; // Hide the calendar
-        }
+        calendarPopup.style.display = calendarPopup.style.display === 'none' ? 'block' : 'none';
     });
 
-    // Add event listener to detect date change in calendar
+    // Date input change event listener
     const calendarInput = document.getElementById('calendarInput');
     calendarInput.addEventListener('change', function() {
         const selectedDate = calendarInput.value;
         console.log('Selected date:', selectedDate);
-        // You can now fetch diary entries for the selected date and display them
-        // fetchDiaryEntriesForDate(selectedDate);
     });
+
+    // Search functionality
+    const searchIcon = document.getElementById('search');
+    searchIcon.addEventListener('click', function () {
+        const selectedDate = calendarInput.value;
+        if (selectedDate) {
+            searchDiaryEntriesByDate(entries, selectedDate); // Ensure correct function name
+        } else {
+            alert("Please select a date.");
+        }
+    });
+
+    // Fetch all diary entries on page load
     try {
-        // Get the current logged-in user's UID
         const userId = await getCurrentUserId();
-        const diaryEntries = await fetchAllDiaryEntries(userId);
+        entries = await fetchAllDiaryEntries(userId); // Store all diary entries globally
         
-        // Check if there are diary entries
-        if (diaryEntries && Object.keys(diaryEntries).length > 0) {
-            displayDiaryEntries(diaryEntries); // Pass the diaryEntries to the function
-            calendarSearchContainer.style.display = 'flex'; // Show calendar and search icon
+        if (entries && Object.keys(entries).length > 0) {
+            displayDiaryEntries(entries); // Display all entries
+            calendarSearchContainer.style.display = 'flex';
         } else {
             diaryContainer.innerHTML = `<p>Oops! No diary entries found.</p>`;
-            calendarSearchContainer.style.display = 'none'; // Hide calendar and search icon
+            calendarSearchContainer.style.display = 'none';
         }
     } catch (error) {
-        console.error('Error fetching diary entries or user data:', error);
-        diaryContainer.innerHTML = `<p>Error fetching diary entries or user data.</p>`;
-        calendarSearchContainer.style.display = 'none'; // Hide calendar and search icon
+        console.error('Error fetching diary entries:', error);
+        diaryContainer.innerHTML = `<p>Error fetching diary entries.</p>`;
+        calendarSearchContainer.style.display = 'none';
     }
 
+    // Function to search diary entries by selected date
+    function searchDiaryEntriesByDate(entries, selectedDate) {
+        diaryContainer.innerHTML = ''; // Clear existing entries
+
+        const searchDate = new Date(selectedDate);
+        const searchYear = searchDate.getFullYear();
+        const searchMonth = searchDate.getMonth() + 1; // Months are 0-based, so add 1
+        const searchDay = searchDate.getDate();
+
+        if (entries[searchYear] && entries[searchYear][searchMonth]) {
+            const matchingEntries = entries[searchYear][searchMonth].filter(entry => entry.day === searchDay);
+
+            if (matchingEntries.length > 0) {
+                matchingEntries.forEach(entry => {
+                    const entryDiv = document.createElement('div');
+                    entryDiv.classList.add('entry-box');
+                    entryDiv.innerHTML = `
+                        <div class="entry">
+                            <span class="details-date">${searchYear}-${searchMonth.toString().padStart(2, '0')}-${searchDay.toString().padStart(2, '0')}</span>
+                            <button class="ms-auto mx-4 details-btn">Details</button>
+                        </div>
+                    `;
+                    diaryContainer.appendChild(entryDiv);
+                });
+            } else {
+                diaryContainer.innerHTML = `<p>No diary entries found for ${selectedDate}.</p>`;
+            }
+        } else {
+            diaryContainer.innerHTML = `<p>No diary entries found for ${selectedDate}.</p>`;
+        }
+    }
+
+    
     // Function to fetch diary entries from Firestore
     async function fetchAllDiaryEntries(userId) {
         try {
