@@ -430,7 +430,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     entryDiv.innerHTML = `
                         <div class="entry"><br><br>
                             <span class="details-date">${searchYear}-${searchMonth.toString().padStart(2, '0')}-${searchDay.toString().padStart(2, '0')}</span>
-                            <button class="ms-auto mx-4 details-btn">Details</button>
+                            <button class="details-btn">Details</button>
                         </div>
                     `;
                     diaryContainer.appendChild(entryDiv);
@@ -495,8 +495,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         years.forEach(year => {
             const yearDiv = document.createElement('div');
-            yearDiv.classList.add('year');
-            yearDiv.innerHTML = `<br><br><h1>${year}</h1> <hr class="year"> `;
+            yearDiv.classList.add('<hr>year');
+            yearDiv.innerHTML = `<br><br><hr class="year"><h1>${year}</h1> <hr class="year"> `;
             diaryContainer.appendChild(yearDiv);
 
             const months = Object.keys(entries[year]).sort((a, b) => b - a);
@@ -515,7 +515,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     entryDiv.innerHTML = `
                         <div class="entry">
                             <span class="details-date">${year}-${month.toString().padStart(2, '0')}-${entry.day.toString().padStart(2, '0')}</span>
-                            <button class="ms-auto mx-4 details-btn">Details</button>
+                            <button class="details-btn">Details</button>
                         </div>
                     `;
                     monthDiv.appendChild(entryDiv);
