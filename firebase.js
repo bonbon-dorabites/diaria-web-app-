@@ -426,7 +426,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     `;
                     diaryContainer.appendChild(entryDiv);
                 });
-                
+
                 // Add "Display All" button
                 const displayAllButton = document.createElement('button');
                 displayAllButton.classList.add('display-all-btn');
@@ -441,6 +441,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         } else {
             diaryContainer.innerHTML = `<p>No diary entries found for ${selectedDate}.</p>`;
         }
+        document.getElementById('calendarInput').value = ''; // Reset the value
     }
 
     
