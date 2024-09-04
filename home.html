@@ -58,6 +58,28 @@
                 width: 50vw;
             }
         }
+
+        /* Adjust number of boxes per row at different screen sizes */
+        @media screen and (max-width: 1200px) {
+            .entry-box {
+                flex: 1 1 calc(33.33% - 20px); /* 3 boxes per row on smaller screens */
+                max-width: calc(33.33% - 20px);
+            }
+        }
+
+        @media screen and (max-width: 800px) {
+            .entry-box {
+                flex: 1 1 calc(50% - 20px); /* 2 boxes per row on medium screens */
+                max-width: calc(50% - 20px);
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            .entry-box {
+                flex: 1 1 calc(100% - 20px); /* 1 box per row on small screens */
+                max-width: calc(100% - 20px);
+            }
+        }
     </style>
     <title>Diaria | Journal Helper</title>
 </head>

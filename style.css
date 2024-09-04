@@ -338,66 +338,65 @@ hr.year {
     text-decoration: underline; /* Optional: add underline on hover */
 }
 
-#diaryContainer {
-    padding: 20px;
-    height: 100vh;
+/* Flexbox for entries */
+.flex-container {
+    font-family: "Rubik", sans-serif;
     display: flex;
-    flex-direction: column;
-    align-items: center; /* Centers the entire container content horizontally */
-}
-
-.year {
-    margin-bottom: 20px;
-    text-align: center; /* Center text */
-}
-
-.month {
-    margin-bottom: 10px;
-    text-align: left; /* Center text */
+    flex-wrap: wrap;
+    justify-content: center; /* Center all boxes horizontally */
+    max-width: 1200px; /* Limit container width */
+    margin: 0 auto; /* Center the flex container */
+    gap: 20px; /* Gap between the boxes */
+    padding: 20px; /* Optional: Add padding around the container */
 }
 
 .entry-box {
-    display: flex;
-    justify-content: space-between; /* Adds space between the date and button */
-    align-items: center; /* Vertically centers the content within the box */
-    padding: 10px;
-    margin: 5px 5vw;
+    font-family: "Rubik", sans-serif;
+    flex: 1 1 calc(25% - 20px); /* Each box takes up 25% of the container's width minus the gap */
+    max-width: calc(25% - 20px); /* Limit to 4 boxes per row */
+    min-width: 200px; /* Ensure a minimum width for smaller screens */
     border: 1px solid #ccc;
-    background-color: lightgreen;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: "Rubik", sans-serif;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
 }
 
-.entry {
-    flex-grow: 1; /* Ensures the entry takes up available space */
-    display: flex;
-    align-items: center;
+.month-year-title {
+    margin-top: 15px;
+    font-family: "Rubik", sans-serif;
+    text-align: center; /* Center the text inside the div */
+    width: 100%; /* Make sure the div takes the full width of the container */
 }
 
-.details-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
+.year {
+    width: 100%;
+    text-align: center;
 }
 
-.details-btn:hover {
-    background-color: #0056b3;
-}
-
-.details-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-.details-btn:hover {
-    background-color: #0056b3;
+.year-title {
+    font-size: 100px;
 }
 
 .details-date {
-    padding-right: 5vw;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.details-btn {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.details-btn:hover {
+    background-color: #0056b3;
 }
 
 /* Flexbox layout for container */

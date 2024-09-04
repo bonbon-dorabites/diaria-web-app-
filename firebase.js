@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, getDocs, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, query, where, getDocs, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -555,18 +555,25 @@ document.addEventListener('DOMContentLoaded', async function() {
         const years = Object.keys(entries).sort((a, b) => b - a);
     
         years.forEach(year => {
+            // Year section - outside of the flex container
             const yearDiv = document.createElement('div');
             yearDiv.classList.add('year');
-            yearDiv.innerHTML = `<br><hr><h1>${year}</h1>`;
+            yearDiv.innerHTML = `<br><hr><h1 class="year-title">${year}</h1><br>`;
             diaryContainer.appendChild(yearDiv);
     
             const months = Object.keys(entries[year]).sort((a, b) => b - a);
     
             months.forEach(month => {
-                const monthDiv = document.createElement('div');
-                monthDiv.classList.add('month');
-                monthDiv.innerHTML = `<h3>${getMonthName(month)} ${year}</h3>`;
-                diaryContainer.appendChild(monthDiv);
+                // Month-Year section - below the year title but above the entries
+                const monthYearTitle = document.createElement('div');
+                monthYearTitle.classList.add('month-year-title');
+                monthYearTitle.innerHTML = `<h3>${getMonthName(month)} ${year}</h3>`;
+                diaryContainer.appendChild(monthYearTitle);
+    
+                // Container for entries of that particular month (flexbox applied here)
+                const flexContainer = document.createElement('div');
+                flexContainer.classList.add('flex-container'); // Flex container for entries
+                diaryContainer.appendChild(flexContainer);
     
                 const days = entries[year][month].sort((a, b) => a.day - b.day);
     
@@ -575,11 +582,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                     entryDiv.classList.add('entry-box');
                     entryDiv.innerHTML = `
                         <div class="entry">
-                            <span class="details-date">${year}-${month.toString().padStart(2, '0')}-${entry.day.toString().padStart(2, '0')}</span>
-                            <button class="details-btn" data-year="${year}" data-month="${month}" data-day="${entry.day}">Details</button>
+                            <span class="details-date">${year}-${month.toString().padStart(2, '0')}-${entry.day.toString().padStart(2, '0')}
+                            &nbsp&nbsp&nbsp<button class="details-btn" data-year="${year}" data-month="${month}" data-day="${entry.day}">Details</button></span>
                         </div>
                     `;
-                    monthDiv.appendChild(entryDiv);
+                    flexContainer.appendChild(entryDiv);
                 });
             });
         });
@@ -602,6 +609,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
         });
     }
+    
     
 
     
