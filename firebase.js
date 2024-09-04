@@ -557,7 +557,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         years.forEach(year => {
             const yearDiv = document.createElement('div');
             yearDiv.classList.add('year');
-            yearDiv.innerHTML = `<h1>${year}</h1>`;
+            yearDiv.innerHTML = `<br><hr><h1>${year}</h1>`;
             diaryContainer.appendChild(yearDiv);
     
             const months = Object.keys(entries[year]).sort((a, b) => b - a);
