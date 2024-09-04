@@ -311,6 +311,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                             document.getElementById('journal-text').value = ''; // Reset the value
                             console.log("New diary entry saved:", { content: journalContent, timestamp: new Date() });
 
+                            // Fetch updated entries and display them
+                            const userId = user.uid; // Assuming user ID is available
+                            const updatedEntries = await fetchAllDiaryEntries(userId); // Fetch updated entries
+                            displayDiaryEntries(updatedEntries); // Update the display with new entries
+
                         }
                     } catch (error) {
                         console.error("Error saving diary entry:", error);
