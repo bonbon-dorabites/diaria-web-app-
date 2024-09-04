@@ -33,9 +33,13 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
+// Variables to store original values
+let originalFirstName, originalLastName, originalBday, originalAge, originalEmail;
+
+// Function to fetch user data from Firebase and initialize form
 async function fetchUserData(uid) {
     try {
-        console.log("Fetching user data for UID: ", uid); // Debugging log
+        console.log("Fetching user data for UID:", uid); // Debugging log
         const usersCollection = collection(db, "users"); // Ensure this matches your Firestore collection name
         const q = query(usersCollection, where("uid", "==", uid));
         const querySnapshot = await getDocs(q);
@@ -43,22 +47,124 @@ async function fetchUserData(uid) {
         if (!querySnapshot.empty) {
             const docSnap = querySnapshot.docs[0];
             const userData = docSnap.data();
-            console.log("User Data: ", userData); // Debugging log
+            console.log("User Data:", userData); // Debugging log
 
-            // Update profile section
+            // Update profile section with fetched user data
             document.getElementById("fName").value = userData.firstName || '';
             document.getElementById("lName").value = userData.lastName || '';
             document.getElementById("bday").value = userData.birthday || '';
             document.getElementById("old").value = userData.age || '';
             document.getElementById("acc").value = userData.email || '';
-            document.getElementById("firstName").textContent = (userData.firstName || '').split(' ')[0]+'!';
+            document.getElementById("firstName").textContent = (userData.firstName || '').split(' ')[0] + '!';
+
+            // Store original values
+            originalFirstName = userData.firstName || '';
+            originalLastName = userData.lastName || '';
+            originalBday = userData.birthday || '';
+            originalAge = userData.age || '';
+            originalEmail = userData.email || '';
+
+            // Setup event listeners for edit and publish actions
+            setupEventListeners(uid);
         } else {
             console.log("No matching documents found!");
         }
     } catch (error) {
-        console.error("Error fetching user data2: ", error);
+        console.error("Error fetching user data:", error);
     }
 }
+
+// Function to setup event listeners for edit and publish actions
+function setupEventListeners(uid) {
+    // Event listener for the "Edit Details" button
+    document.getElementById("edit").addEventListener("click", function (e) {
+        e.preventDefault(); // Prevent page navigation
+
+        // Enable the input fields for editing
+        document.getElementById("fName").readOnly = false;
+        document.getElementById("lName").readOnly = false;
+        document.getElementById("bday").readOnly = false;
+        document.getElementById("old").readOnly = false;
+        document.getElementById("acc").readOnly = false;
+
+        // Show Publish and Cancel Edit buttons, hide Edit Details button
+        document.getElementById("edit").style.display = "none";
+        document.getElementById("publish").style.display = "inline";
+        document.getElementById("cancel").style.display = "inline";
+    });
+
+    // Event listener for the "Publish" button
+    document.getElementById("publish").addEventListener("click", async function (e) {
+        e.preventDefault(); // Prevent page navigation
+
+        // Reference to the user's document in Firestore
+        const userDocRef = doc(db, "users", uid);
+
+        try {
+            // Update user document with new values
+            await setDoc(userDocRef, {
+                firstName: document.getElementById("fName").value,
+                lastName: document.getElementById("lName").value,
+                birthday: document.getElementById("bday").value,
+                age: document.getElementById("old").value,
+                email: document.getElementById("acc").value
+            }, { merge: true });
+
+            // After saving, disable the inputs again
+            document.getElementById("fName").readOnly = true;
+            document.getElementById("lName").readOnly = true;
+            document.getElementById("bday").readOnly = true;
+            document.getElementById("old").readOnly = true;
+            document.getElementById("acc").readOnly = true;
+
+            // Hide Publish and Cancel Edit buttons, show Edit Details button
+            document.getElementById("edit").style.display = "inline";
+            document.getElementById("publish").style.display = "none";
+            document.getElementById("cancel").style.display = "none";
+            
+            alert("Changes saved successfully!");
+        } catch (error) {
+            console.error("Error saving user data:", error);
+            alert("Failed to save user data.");
+        }
+    });
+
+    // Event listener for the "Cancel Edit" button
+    document.getElementById("cancel").addEventListener("click", function (e) {
+        e.preventDefault(); // Prevent page navigation
+
+        // Revert to the original values
+        document.getElementById("fName").value = originalFirstName;
+        document.getElementById("lName").value = originalLastName;
+        document.getElementById("bday").value = originalBday;
+        document.getElementById("old").value = originalAge;
+        document.getElementById("acc").value = originalEmail;
+
+        // Disable the input fields again
+        document.getElementById("fName").readOnly = true;
+        document.getElementById("lName").readOnly = true;
+        document.getElementById("bday").readOnly = true;
+        document.getElementById("old").readOnly = true;
+        document.getElementById("acc").readOnly = true;
+
+        // Hide Publish and Cancel Edit buttons, show Edit Details button
+        document.getElementById("edit").style.display = "inline";
+        document.getElementById("publish").style.display = "none";
+        document.getElementById("cancel").style.display = "none";
+    });
+}
+
+// Example usage: Fetch user data once Firebase auth state changes and user is logged in
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        console.log("User logged in:", user.uid);
+        await fetchUserData(user.uid);
+    } else {
+        console.log("No user is logged in.");
+    }
+});
+
+
 // Helper function to validate email format
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
