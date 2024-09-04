@@ -259,85 +259,72 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Monitor auth state
-onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        console.log("User logged in:", user.uid);
-        const userId = user.uid;
-
-        // Reference to the user's document where the UID is stored
-        // Update this to the actual path of the document where the UID is stored
-        const userDocRef = doc(db, "users", userId);
-
-        try {
-            // Check if the user document exists
-            const userDocSnapshot = await getDoc(userDocRef);
-
-            console.log("User document exists.");
-
-            // Event listener for the Save button
-            document.getElementById("save-journal").addEventListener("click", async () => {
-                const journalDate = document.getElementById("journal-date").value;
-                const journalContent = document.getElementById("journal-text").value;
-
-                // Validate that the date is selected
-                if (!journalDate) {
-                    alert("Please select a date.");
-                    return;
-                }
-
-                try {
-                    // Reference to the subcollection 'diaryEntries' under the user's document
-                    const diaryEntryRef = doc(collection(userDocRef, "diaryEntries"), journalDate);
-
-                    console.log("Diary entry reference:", diaryEntryRef);
-
-                    // Check if the diary entry for the given date already exists
-                    const docSnapshot = await getDoc(diaryEntryRef);
-                    console.log("Document snapshot:", docSnapshot.exists());
-
-                    if (docSnapshot.exists()) {
-                        alert("An entry already exists for this date.");
-                        console.log("Entry already exists:", docSnapshot.data());
-                    } else {
-                        // Create a new diary entry under the 'diaryEntries' subcollection of the user document
-                        await setDoc(diaryEntryRef, {
-                            content: journalContent,
-                            timestamp: new Date()
-                        });
-                        alert("Diary entry saved successfully!");
-                        document.getElementById('journal-date').value = ''; // Reset the value
-                        document.getElementById('journal-text').value = ''; // Reset the value
-                        console.log("New diary entry saved:", { content: journalContent, timestamp: new Date() });
-                    }
-                } catch (error) {
-                    console.error("Error saving diary entry:", error);
-                    alert("Failed to save diary entry.");
-                }
-            });
-        } catch (error) {
-            console.error("Error retrieving user document:", error);
-        }
-    } else {
-        console.log("No user is logged in.");
-    }
-}); 
-
-// Function to get the current logged-in user ID
-function getCurrentUserId() {
-    return new Promise((resolve, reject) => {
-        const auth = getAuth();
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                resolve(user.uid); // Return the user's UID
-            } else {
-                reject('No user is logged in');
-            }
-        });
-    });
-}
-
 document.addEventListener('DOMContentLoaded', async function() {
+    // Monitor auth state
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            console.log("User logged in:", user.uid);
+            const userId = user.uid;
+
+            // Reference to the user's document where the UID is stored
+            // Update this to the actual path of the document where the UID is stored
+            const userDocRef = doc(db, "users", userId);
+
+            try {
+                // Check if the user document exists
+                const userDocSnapshot = await getDoc(userDocRef);
+
+                console.log("User document exists.");
+
+                // Event listener for the Save button
+                document.getElementById("save-journal").addEventListener("click", async () => {
+                    const journalDate = document.getElementById("journal-date").value;
+                    const journalContent = document.getElementById("journal-text").value;
+
+                    // Validate that the date is selected
+                    if (!journalDate) {
+                        alert("Please select a date.");
+                        return;
+                    }
+
+                    try {
+                        // Reference to the subcollection 'diaryEntries' under the user's document
+                        const diaryEntryRef = doc(collection(userDocRef, "diaryEntries"), journalDate);
+
+                        console.log("Diary entry reference:", diaryEntryRef);
+
+                        // Check if the diary entry for the given date already exists
+                        const docSnapshot = await getDoc(diaryEntryRef);
+                        console.log("Document snapshot:", docSnapshot.exists());
+
+                        if (docSnapshot.exists()) {
+                            alert("An entry already exists for this date.");
+                            console.log("Entry already exists:", docSnapshot.data());
+                        } else {
+                            // Create a new diary entry under the 'diaryEntries' subcollection of the user document
+                            await setDoc(diaryEntryRef, {
+                                content: journalContent,
+                                timestamp: new Date()
+                            });
+                            alert("Diary entry saved successfully!");
+                            document.getElementById('journal-date').value = ''; // Reset the value
+                            document.getElementById('journal-text').value = ''; // Reset the value
+                            console.log("New diary entry saved:", { content: journalContent, timestamp: new Date() });
+
+                        }
+                    } catch (error) {
+                        console.error("Error saving diary entry:", error);
+                        alert("Failed to save diary entry.");
+                    }
+                });
+            } catch (error) {
+                console.error("Error retrieving user document:", error);
+            }
+        } else {
+            console.log("No user is logged in.");
+        }
+    }); 
+
     let entries = {}; // Globally accessible for storing diary entries
     const diaryContainer = document.getElementById('diaryContainer');
     const calendarSearchContainer = document.createElement('div');
