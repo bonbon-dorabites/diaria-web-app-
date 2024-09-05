@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, getDocs, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, getDocs, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -33,7 +33,7 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-// Variables to store original values
+    // Variables to store original values
 let originalFirstName, originalLastName, originalBday, originalAge, originalEmail;
 
 // Function to fetch user data from Firebase and initialize form
@@ -65,7 +65,7 @@ async function fetchUserData(uid) {
             originalEmail = userData.email || '';
 
             // Setup event listeners for edit and publish actions
-            setupEventListeners(uid);
+            setupEventListeners(docSnap.id); // Pass document ID for updating the same document
         } else {
             console.log("No matching documents found!");
         }
@@ -75,7 +75,7 @@ async function fetchUserData(uid) {
 }
 
 // Function to setup event listeners for edit and publish actions
-function setupEventListeners(uid) {
+function setupEventListeners(docId) {
     // Event listener for the "Edit Details" button
     document.getElementById("edit").addEventListener("click", function (e) {
         e.preventDefault(); // Prevent page navigation
@@ -97,18 +97,18 @@ function setupEventListeners(uid) {
     document.getElementById("publish").addEventListener("click", async function (e) {
         e.preventDefault(); // Prevent page navigation
 
-        // Reference to the user's document in Firestore
-        const userDocRef = doc(db, "users", uid);
-
         try {
+            // Reference to the user's document in Firestore (using docId from fetched document)
+            const userDocRef = doc(db, "users", docId);
+
             // Update user document with new values
-            await setDoc(userDocRef, {
+            await updateDoc(userDocRef, {
                 firstName: document.getElementById("fName").value,
                 lastName: document.getElementById("lName").value,
                 birthday: document.getElementById("bday").value,
                 age: document.getElementById("old").value,
                 email: document.getElementById("acc").value
-            }, { merge: true });
+            });
 
             // After saving, disable the inputs again
             document.getElementById("fName").readOnly = true;
@@ -122,9 +122,9 @@ function setupEventListeners(uid) {
             document.getElementById("publish").style.display = "none";
             document.getElementById("cancel").style.display = "none";
             
-            alert("Changes saved successfully!");
+            alert("Changes saved successfully to Firestore!");
         } catch (error) {
-            console.error("Error saving user data:", error);
+            console.error("Error saving user data to Firestore:", error);
             alert("Failed to save user data.");
         }
     });
@@ -158,7 +158,7 @@ function setupEventListeners(uid) {
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         console.log("User logged in:", user.uid);
-        await fetchUserData(user.uid);
+        await fetchUserData(user.uid); // Fetch user data using UID
     } else {
         console.log("No user is logged in.");
     }
