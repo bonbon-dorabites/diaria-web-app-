@@ -360,6 +360,8 @@ hr.year {
     border-radius: 5px;
     font-family: "Rubik", sans-serif;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    justify-content: center;
+    align-items: center;
     background-color: #f9f9f9;
 }
 

@@ -569,6 +569,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     
     
+    
     // Function to fetch diary entries from Firestore
     async function fetchAllDiaryEntries(userId) {
         try {
