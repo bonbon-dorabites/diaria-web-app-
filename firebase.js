@@ -682,10 +682,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         detailsDiv.classList.add('details-view');
         
         // Populate the content of the details view
-        detailsDiv.innerHTML = `
-            <h2>${entryDate}</h2>
-            <textarea class="entry-textarea" readonly>${entry.content || 'No content available'}</textarea><br>
-            <button class="go-back-btn">Go Back to All Entries</button>
+        detailsDiv.innerHTML = `<br>
+            <h2>${entryDate}</h2><br>
+            <textarea class="entry-textarea" readonly>${entry.content || 'No content available'}</textarea><br><br>
+            <button id="edit" class="go-back-btn btn">&nbsp;&nbsp;&nbsp;Go Back to All Entries&nbsp;&nbsp;&nbsp;</button>
         `;
 
 

@@ -350,6 +350,11 @@ hr.year {
     height: 70vh;
 }
 
+.entry-textarea {
+    width: 70vw;
+    height: 70vh;
+}
+
 #save-journal {
     justify-content: center;
     border-radius: 40px;
