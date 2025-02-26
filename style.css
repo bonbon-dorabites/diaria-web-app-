@@ -3,7 +3,7 @@ body, html {
     margin: 0;
     padding: 0;
     height: 100%;
-    font-family: "Rubik", sans-serif;
+    font-family: "Rubik", sans-serif !important;
 }
 
 .account-page, .division {
@@ -107,7 +107,7 @@ body, html {
 
 section.hero {
     background-color: #290c24dc;
-    border-radius: 0 0 200px 200px;
+    border-radius: 0 0 150px 150px;
 }
 
 section.hero .banner {
@@ -118,6 +118,26 @@ section.hero .banner {
 
 .banner {
     padding-top: 15px;
+}
+
+#create {
+    background-color: #290c24dc !important;
+    border: none !important;
+    color: white !important;
+}
+
+#create:hover {
+    background-color: #8f4581dc !important;
+}
+
+#signin {
+    background-color: #8f4581dc !important;
+    border: none !important;
+    color: white !important;
+}
+
+#signin:hover {
+    background-color: #290c24dc !important;
 }
 
 .buttons {
@@ -158,7 +178,7 @@ hr.year {
 }
 
 .aboutapp {
-    background-color: #f7f7edc4;
+    background-color: #ebebdec4;
 }
 
 .about {
@@ -209,15 +229,27 @@ hr.year {
 #edit {
     background-color: #180615dc;
     color: white;
-    border: #180615dc;
+    border-radius: 20px;
+}
+
+#cancel {
+    background-color: #361130dc;
+    color: white;
     border-radius: 20px;
 }
 
 #publish {
-    border: #180615dc;
     background-color: #180615dc;
     color: white;
     border-radius: 20px;
+}
+
+#edit:hover, #publish:hover {
+    background-color: #361130dc;
+}
+
+#cancel:hover {
+    background-color: #180615dc;
 }
 
 #floating-icons {
@@ -307,12 +339,15 @@ hr.year {
 }
 
 #journal-date {
-    width: 75%;
+    width: 15%;
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
 }
 
 #journal-text {
     width: 75%;
-    height: 100vh;
+    height: 70vh;
 }
 
 #save-journal {

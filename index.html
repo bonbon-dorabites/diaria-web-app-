@@ -19,10 +19,8 @@
         }
 
         @media (max-width: 767px){
-            .banner {
-                padding-top: 5vh;
+            .banner p {
                 font-weight: bold;
-                font-size: 100px;
                 color: white;
             }
             
@@ -41,7 +39,7 @@
 
         @media (max-width: 650px){
             .hero-img {
-                width: 75%;
+                width: 65%;
             }
 
             .logo-img {
@@ -89,8 +87,8 @@
         }
 
         @media (max-width: 576px){
-            .banner {
-                font-size: 25px;
+            .banner p {
+                font-size: 40px;
             }
             .left-row {
                 margin-left: 10px;
@@ -103,14 +101,20 @@
             }
         }
 
-        @media (max-width: 483px){
-            .hero-img {
-                width: 80%;
+        @media (max-width: 535px){
+            .banner p {
+                font-size: 30px;
             }
+        }
 
+        @media (max-width: 483px){
             .left-row {
                 margin-right: 4vw;
             }
+
+            /* .banner p {
+                font-size: 30px;
+            } */
         }
 
         @media (max-width: 356px){
@@ -164,7 +168,7 @@
                             <a class="nav-link" href="#how-it-helps">How it helps</a>
                         </li>
                         <li class="nav-item px-3">
-                            <a href="signup.html" class="btn btn-primary" target="_blank">Try now</a>
+                            <a id="signin" href="signup.html" class="btn btn-primary" target="_blank">Don't have an account?</a>
                         </li>
                     </ul>
                 </div>
@@ -174,15 +178,16 @@
     <section id="banner-page" class="hero">
         <div class="container grid">
             <div class="row justify-content-center align-items-center">
-                <div class="col-md-6 text-center justify-content-center align-items-center">
-                    <div class="banner">Share with us how trashworthy your day was</div>
-                    <div class="buttons">
-                        <a id="create" href="signup.html" class="btn btn-primary" target="_blank">Create Account</a>
-                        <a id="signin" href="login.html" class="btn btn-outline-secondary ms-3" target="_blank">Sign-In</a>
-                    </div>
-                </div>
-                <div class="col-md-6 hero-img">
+                <div class="col-md-6 hero-img mx-0 ms-0 px-0 ps-0">
                     <img src="banner.png" class="hero-img" alt="Journal">
+                </div>
+                <div class="col-md-6 text-center justify-content-center align-items-center mx-0 ms-0 px-0 ps-0">
+                    <div class="banner mx-0 ms-0 px-0 ps-0"><p>Share with us how trashworthy your day was</p></div>
+                    <div class="buttons mx-0 ms-0 px-0 ps-0">
+                        <a id="create" href="login.html" class="btn btn-outline-secondary ms-3 h-100" target="_blank">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Sharing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

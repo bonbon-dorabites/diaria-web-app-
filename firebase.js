@@ -18,6 +18,70 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+function showModal(message, isSuccess) {
+    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+    const modalMessage = document.getElementById('modalMessage');
+
+    modalMessage.textContent = message;
+
+    // Change color based on success or error
+    if (isSuccess) {
+        document.querySelector('#loadingModal .modal-content').style.backgroundColor = '#d4edda';
+    } else {
+        document.querySelector('#loadingModal .modal-content').style.backgroundColor = '#f8d7da';
+    }
+
+    loadingModal.show();
+}
+
+function hideModal() {
+    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+    loadingModal.hide();
+}
+
+function showConfirmation(message, callback) {
+    const modalElement = document.getElementById('confirmationModal');
+    const modalInstance = new bootstrap.Modal(modalElement);
+    const modalMessage = document.getElementById('confirmationMessage');
+    const confirmButton = document.getElementById('confirmActionBtn');
+
+    // Set the confirmation message
+    modalMessage.textContent = message;
+
+    // Remove any previous event listeners to prevent duplicate triggers
+    confirmButton.replaceWith(confirmButton.cloneNode(true));
+    const newConfirmButton = document.getElementById('confirmActionBtn');
+
+    // Attach the new event listener
+    newConfirmButton.addEventListener("click", function () {
+        callback(); // Execute the callback function
+        modalInstance.hide(); // Hide the modal
+    });
+
+    // Listen for when the modal is fully hidden
+    modalElement.addEventListener("hidden.bs.modal", function () {
+        // Restore scrolling
+        document.body.style.overflow = 'auto';
+        document.documentElement.style.overflow = 'auto';
+    
+        // Remove any lingering modal-backdrop elements
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+    
+        // Remove Bootstrap's modal-open class if still present
+        if (document.body.classList.contains('modal-open')) {
+            document.body.classList.remove('modal-open');
+        }
+    
+        // Fix extra space issue
+        document.body.style.paddingRight = '0px'; 
+        document.body.style.marginRight = '0px';
+        document.body.style.borderRight = '0px';  
+    });    
+
+    // Show the modal
+    modalInstance.show();
+}
+
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         console.log("User is authenticated");
@@ -97,60 +161,63 @@ function setupEventListeners(docId) {
     document.getElementById("publish").addEventListener("click", async function (e) {
         e.preventDefault(); // Prevent page navigation
 
-        try {
-            // Reference to the user's document in Firestore (using docId from fetched document)
-            const userDocRef = doc(db, "users", docId);
-
-            // Update user document with new values
-            await updateDoc(userDocRef, {
-                firstName: document.getElementById("fName").value,
-                lastName: document.getElementById("lName").value,
-                birthday: document.getElementById("bday").value,
-                age: document.getElementById("old").value,
-                email: document.getElementById("acc").value
-            });
-
-            // After saving, disable the inputs again
-            document.getElementById("fName").readOnly = true;
-            document.getElementById("lName").readOnly = true;
-            document.getElementById("bday").readOnly = true;
-            document.getElementById("old").readOnly = true;
-            document.getElementById("acc").readOnly = true;
-
-            // Hide Publish and Cancel Edit buttons, show Edit Details button
-            document.getElementById("edit").style.display = "inline";
-            document.getElementById("publish").style.display = "none";
-            document.getElementById("cancel").style.display = "none";
-            
-            alert("Changes saved successfully to Firestore!");
-        } catch (error) {
-            console.error("Error saving user data to Firestore:", error);
-            alert("Failed to save user data.");
-        }
+        showConfirmation("Are you sure you wish to update your personal info?", async function () { 
+            try {
+                // Reference to the user's document in Firestore (using docId from fetched document)
+                const userDocRef = doc(db, "users", docId);
+    
+                // Update user document with new values
+                await updateDoc(userDocRef, {
+                    firstName: document.getElementById("fName").value,
+                    lastName: document.getElementById("lName").value,
+                    birthday: document.getElementById("bday").value,
+                    age: document.getElementById("old").value,
+                    email: document.getElementById("acc").value
+                });
+    
+                // After saving, disable the inputs again
+                document.getElementById("fName").readOnly = true;
+                document.getElementById("lName").readOnly = true;
+                document.getElementById("bday").readOnly = true;
+                document.getElementById("old").readOnly = true;
+                document.getElementById("acc").readOnly = true;
+    
+                // Hide Publish and Cancel Edit buttons, show Edit Details button
+                document.getElementById("edit").style.display = "inline";
+                document.getElementById("publish").style.display = "none";
+                document.getElementById("cancel").style.display = "none";
+                
+                showModal("Changes saved successfully to Firestore!", true);
+            } catch (error) {
+                console.error("Error saving user data to Firestore:", error);
+            }
+        });
     });
 
     // Event listener for the "Cancel Edit" button
     document.getElementById("cancel").addEventListener("click", function (e) {
         e.preventDefault(); // Prevent page navigation
 
-        // Revert to the original values
-        document.getElementById("fName").value = originalFirstName;
-        document.getElementById("lName").value = originalLastName;
-        document.getElementById("bday").value = originalBday;
-        document.getElementById("old").value = originalAge;
-        document.getElementById("acc").value = originalEmail;
-
-        // Disable the input fields again
-        document.getElementById("fName").readOnly = true;
-        document.getElementById("lName").readOnly = true;
-        document.getElementById("bday").readOnly = true;
-        document.getElementById("old").readOnly = true;
-        document.getElementById("acc").readOnly = true;
-
-        // Hide Publish and Cancel Edit buttons, show Edit Details button
-        document.getElementById("edit").style.display = "inline";
-        document.getElementById("publish").style.display = "none";
-        document.getElementById("cancel").style.display = "none";
+        showConfirmation("Are you sure you want to cance your edits?", async function () {
+            // Revert to the original values
+            document.getElementById("fName").value = originalFirstName;
+            document.getElementById("lName").value = originalLastName;
+            document.getElementById("bday").value = originalBday;
+            document.getElementById("old").value = originalAge;
+            document.getElementById("acc").value = originalEmail;
+    
+            // Disable the input fields again
+            document.getElementById("fName").readOnly = true;
+            document.getElementById("lName").readOnly = true;
+            document.getElementById("bday").readOnly = true;
+            document.getElementById("old").readOnly = true;
+            document.getElementById("acc").readOnly = true;
+    
+            // Hide Publish and Cancel Edit buttons, show Edit Details button
+            document.getElementById("edit").style.display = "inline";
+            document.getElementById("publish").style.display = "none";
+            document.getElementById("cancel").style.display = "none";
+        });
     });
 }
 
@@ -163,6 +230,7 @@ onAuthStateChanged(auth, async (user) => {
         console.log("No user is logged in.");
     }
 });
+
 
 
 // Helper function to validate email format
@@ -206,29 +274,6 @@ document.addEventListener('DOMContentLoaded', () => {
         birthdayInput.addEventListener('change', handleBirthdayChange);
     }
 });
-
-
-function showModal(message, isSuccess) {
-    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
-    const modalMessage = document.getElementById('modalMessage');
-
-    modalMessage.textContent = message;
-
-    // Change color based on success or error
-    if (isSuccess) {
-        document.querySelector('#loadingModal .modal-content').style.backgroundColor = '#d4edda';
-    } else {
-        document.querySelector('#loadingModal .modal-content').style.backgroundColor = '#f8d7da';
-    }
-
-    loadingModal.show();
-}
-
-function hideModal() {
-    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
-    loadingModal.hide();
-}
-
 
 async function handleSignup(event) {
     event.preventDefault();
@@ -365,6 +410,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+document.getElementById("logout").addEventListener("click", () => {
+    signOut(auth)
+        .then(() => {
+            console.log("User signed out successfully.");
+            window.location.href = "login.html"; // Redirect to login page
+        })
+        .catch((error) => {
+            console.error("Error signing out:", error);
+        });
+});
+
 document.addEventListener('DOMContentLoaded', async function() {
     // Monitor auth state
     onAuthStateChanged(auth, async (user) => {
@@ -389,7 +445,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
                     // Validate that the date is selected
                     if (!journalDate) {
-                        alert("Please select a date.");
+                        showModal("Please select a date.",false);
                         return;
                     }
 
@@ -404,7 +460,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                         console.log("Document snapshot:", docSnapshot.exists());
 
                         if (docSnapshot.exists()) {
-                            alert("An entry already exists for this date.");
+                            showModal("An entry already exists for this date.",false);
                             console.log("Entry already exists:", docSnapshot.data());
                         } else {
                             // Create a new diary entry under the 'diaryEntries' subcollection of the user document
@@ -412,7 +468,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                                 content: journalContent,
                                 timestamp: new Date()
                             });
-                            alert("Diary entry saved successfully!");
+                            showModal("Diary entry saved successfully!",true);
                             document.getElementById('journal-date').value = ''; // Reset the value
                             document.getElementById('journal-text').value = ''; // Reset the value
                             console.log("New diary entry saved:", { content: journalContent, timestamp: new Date() });
@@ -425,7 +481,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                         }
                     } catch (error) {
                         console.error("Error saving diary entry:", error);
-                        alert("Failed to save diary entry.");
                     }
                 });
             } catch (error) {
@@ -479,7 +534,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (selectedDate) {
             searchDiaryEntriesByDate(entries, selectedDate); // Ensure correct function name
         } else {
-            alert("Please select a date.");
+            showModal("Please select a date.",false);
         }
     });
 
@@ -629,9 +684,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         // Populate the content of the details view
         detailsDiv.innerHTML = `
             <h2>${entryDate}</h2>
-            <p>${entry.content || 'No content available'}</p>
+            <textarea class="entry-textarea" readonly>${entry.content || 'No content available'}</textarea><br>
             <button class="go-back-btn">Go Back to All Entries</button>
         `;
+
+
         diaryContainer.appendChild(detailsDiv);
     
         // Add functionality to the "Go Back" button
