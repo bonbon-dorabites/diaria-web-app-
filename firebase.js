@@ -449,39 +449,41 @@ document.addEventListener('DOMContentLoaded', async function() {
                         return;
                     }
 
-                    try {
-                        // Reference to the subcollection 'diaryEntries' under the user's document
-                        const diaryEntryRef = doc(collection(userDocRef, "diaryEntries"), journalDate);
-
-                        console.log("Diary entry reference:", diaryEntryRef);
-
-                        // Check if the diary entry for the given date already exists
-                        const docSnapshot = await getDoc(diaryEntryRef);
-                        console.log("Document snapshot:", docSnapshot.exists());
-
-                        if (docSnapshot.exists()) {
-                            showModal("An entry already exists for this date.",false);
-                            console.log("Entry already exists:", docSnapshot.data());
-                        } else {
-                            // Create a new diary entry under the 'diaryEntries' subcollection of the user document
-                            await setDoc(diaryEntryRef, {
-                                content: journalContent,
-                                timestamp: new Date()
-                            });
-                            showModal("Diary entry saved successfully!",true);
-                            document.getElementById('journal-date').value = ''; // Reset the value
-                            document.getElementById('journal-text').value = ''; // Reset the value
-                            console.log("New diary entry saved:", { content: journalContent, timestamp: new Date() });
-
-                            // Fetch updated entries and display them
-                            const userId = user.uid; // Assuming user ID is available
-                            const updatedEntries = await fetchAllDiaryEntries(userId); // Fetch updated entries
-                            displayDiaryEntries(updatedEntries); // Update the display with new entries
-
+                    showConfirmation("Are you sure you want to publish your story at this day?", async function () { 
+                        try {
+                            // Reference to the subcollection 'diaryEntries' under the user's document
+                            const diaryEntryRef = doc(collection(userDocRef, "diaryEntries"), journalDate);
+    
+                            console.log("Diary entry reference:", diaryEntryRef);
+    
+                            // Check if the diary entry for the given date already exists
+                            const docSnapshot = await getDoc(diaryEntryRef);
+                            console.log("Document snapshot:", docSnapshot.exists());
+    
+                            if (docSnapshot.exists()) {
+                                showModal("An entry already exists for this date.",false);
+                                console.log("Entry already exists:", docSnapshot.data());
+                            } else {
+                                // Create a new diary entry under the 'diaryEntries' subcollection of the user document
+                                await setDoc(diaryEntryRef, {
+                                    content: journalContent,
+                                    timestamp: new Date()
+                                });
+                                showModal("Diary entry saved successfully!",true);
+                                document.getElementById('journal-date').value = ''; // Reset the value
+                                document.getElementById('journal-text').value = ''; // Reset the value
+                                console.log("New diary entry saved:", { content: journalContent, timestamp: new Date() });
+    
+                                // Fetch updated entries and display them
+                                const userId = user.uid; // Assuming user ID is available
+                                const updatedEntries = await fetchAllDiaryEntries(userId); // Fetch updated entries
+                                displayDiaryEntries(updatedEntries); // Update the display with new entries
+    
+                            }
+                        } catch (error) {
+                            console.error("Error saving diary entry:", error);
                         }
-                    } catch (error) {
-                        console.error("Error saving diary entry:", error);
-                    }
+                    });                    
                 });
             } catch (error) {
                 console.error("Error retrieving user document:", error);
@@ -496,7 +498,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const calendarSearchContainer = document.createElement('div');
     calendarSearchContainer.className = 'calendar-search-container';
     calendarSearchContainer.innerHTML = `
-        <div class="calendar-container container-fluid justify-content-center align-items-center">
+        <div class="calendar-container container-fluid d-flex justify-content-center align-items-center">
             <!-- Calendar Logo -->
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-calendar calendar-icon" viewBox="0 0 16 16">
                 <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
