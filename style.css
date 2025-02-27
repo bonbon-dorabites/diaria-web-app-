@@ -386,6 +386,14 @@ hr.year {
     border-radius: 20px;
 }
 
+.search-calendar {
+    padding-right: 10vw !important;
+}
+
+#calendarInput {
+    text-align: center !important;
+}
+
 .ch-pass {
     text-align: right;
 }
@@ -427,6 +435,25 @@ hr.year {
     background-color: #f9f9f9;
 }
 
+.search-entry-box {
+    display: flex !important;
+    justify-content: center !important; /* Center content */
+    align-items: center !important; /* Align items vertically */
+    width: 100% !important; /* Take full width of parent */
+    margin-bottom: 10px !important; /* Add spacing */
+}
+
+.search-entry-content {
+    display: flex !important;
+    gap: 30px !important; /* Space between date and button */
+    background-color: #f9f9f9;
+    padding: 8px 12px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    align-items: center; /* Ensure button and text are aligned */
+    min-width: 200px; /* Set a minimum width */
+}
+
 .month-year-title {
     margin-top: 15px;
     font-family: "Rubik", sans-serif;
@@ -449,18 +476,18 @@ hr.year {
     margin-bottom: 10px;
 }
 
-.details-btn {
+.details-btn, .display-all-btn {
     margin-top: 10px;
     padding: 5px 10px;
-    background-color: #007bff;
+    background-color: #180615dc;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
-.details-btn:hover {
-    background-color: #0056b3;
+.details-btn:hover, .display-all-btn:hover {
+    background-color: #53194adc;
 }
 
 /* Flexbox layout for container */
@@ -509,20 +536,4 @@ hr.year {
 /* Optional styles */
 .calendar-search-container svg {
     margin-right: 8px; /* Adds spacing between icons */
-}
-
-.display-all-btn {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.display-all-btn:hover {
-    background-color: #0056b3;
 }

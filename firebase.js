@@ -497,19 +497,22 @@ document.addEventListener('DOMContentLoaded', async function() {
     const diaryContainer = document.getElementById('diaryContainer');
     const calendarSearchContainer = document.createElement('div');
     calendarSearchContainer.className = 'calendar-search-container';
-    calendarSearchContainer.innerHTML = `
-        <div class="calendar-container container-fluid d-flex justify-content-center align-items-center">
+    calendarSearchContainer.innerHTML = `<hr style="background-color:black !important;">
+        <div class="search-calendar calendar-container container-fluid d-flex justify-content-end align-items-end my-0 py-0">
             <!-- Calendar Logo -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-calendar calendar-icon" viewBox="0 0 16 16">
-                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-            </svg>
+            <hr>
+            <div id="search" class="search-container d-flex justify-content-center align-items-center my-0 py-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="90" fill="currentColor" class="bi bi-search search-icon" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                </svg>
+            </div>
             <!-- Calendar Input -->
-            <div class="calendar-popup">
+            <div class="calendar-popup d-flex justify-content-center align-items-center">
                 <input type="date" id="calendarInput" class="calendar-input">
             </div>
-            <div id="search" class="search-container">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-search search-icon" viewBox="0 0 16 16">
-                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            <div style="display: none !important;>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" fill="currentColor" class="bi bi-calendar calendar-icon" viewBox="0 0 16 16">
+                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
                 </svg>
             </div>
         </div>`;
@@ -562,70 +565,65 @@ document.addEventListener('DOMContentLoaded', async function() {
         const diaryContainer = document.getElementById('diaryContainer');
         diaryContainer.innerHTML = ''; // Clear existing entries
     
-        // Log the entries object to inspect its structure
         console.log('Entries Object:', entries);
     
-        // Parse selectedDate to Date object and extract year, month, and day
         const searchDate = new Date(selectedDate);
         const searchYear = searchDate.getFullYear();
-        const searchMonth = searchDate.getMonth() + 1; // Months are 0-based, so add 1
+        const searchMonth = searchDate.getMonth() + 1;
         const searchDay = searchDate.getDate();
     
-        // Log parsed date values
         console.log('Selected Date:', selectedDate);
-        console.log('Search Date:', searchDate);
         console.log('Search Year:', searchYear);
         console.log('Search Month:', searchMonth);
         console.log('Search Day:', searchDay);
     
-        // Format the date string
         const formattedDate = `${searchYear}-${searchMonth.toString().padStart(2, '0')}-${searchDay.toString().padStart(2, '0')}`;
     
+
         // Add "Display All" button
         const displayAllButton = document.createElement('button');
         displayAllButton.classList.add('display-all-btn');
         displayAllButton.textContent = 'Display All';
-        displayAllButton.addEventListener('click', function() {
-            displayDiaryEntries(entries); // Redisplay all diary entries
+        displayAllButton.addEventListener('click', function () {
+            displayDiaryEntries(entries);
         });
     
-        // Check if entries for the selected year and month exist
         if (entries[searchYear] && entries[searchYear][searchMonth]) {
             const matchingEntries = entries[searchYear][searchMonth].filter(entry => entry.day === searchDay);
     
             if (matchingEntries.length > 0) {
                 matchingEntries.forEach(entry => {
                     const entryDiv = document.createElement('div');
-                    entryDiv.classList.add('entry-box');
+                    entryDiv.classList.add('search-entry-box'); // Renamed class to avoid conflict
+    
                     entryDiv.innerHTML = `
-                        <div class="entry">
-                            <span class="details-date">${searchYear}-${searchMonth.toString().padStart(2, '0')}-${searchDay.toString().padStart(2, '0')}</span>
+                        <div class="search-entry-content">
+                            <span class="details-date"><br>${formattedDate}</span>
                             <button class="details-btn" data-year="${searchYear}" data-month="${searchMonth}" data-day="${searchDay}">Details</button>
                         </div>
                     `;
+    
                     diaryContainer.appendChild(entryDiv);
     
                     // Add details button functionality
                     const detailsBtn = entryDiv.querySelector('.details-btn');
                     detailsBtn.addEventListener('click', function () {
-                        displayDetails(entry, searchYear, searchMonth, searchDay); // Show details for the clicked entry
+                        displayDetails(entry, searchYear, searchMonth, searchDay);
                     });
                 });
             } else {
-                diaryContainer.innerHTML = `<p>No entries found for ${formattedDate}.</p>`;
+                diaryContainer.innerHTML = `<p class="no-entry-text">No entries found for ${formattedDate}.</p>`;
             }
         } else {
-            diaryContainer.innerHTML = `<p>No entries found for ${formattedDate}.</p>`;
+            diaryContainer.innerHTML = `<p class="no-entry-text">No entries found for ${formattedDate}.</p>`;
         }
     
         // Append the "Display All" button at the end
         diaryContainer.appendChild(displayAllButton);
     
         // Reset the calendar input field
-        document.getElementById('calendarInput').value = ''; // Reset the value
-    }
-    
-    
+        document.getElementById('calendarInput').value = '';
+    }    
     
     // Function to fetch diary entries from Firestore
     async function fetchAllDiaryEntries(userId) {
@@ -634,6 +632,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             const diaryEntriesSnap = await getDocs(diaryEntriesRef);
 
             if (diaryEntriesSnap.empty) {
+                document.getElementById("filterContainer").style.display = "none";
                 console.log('Oops! No diary entries found.');
                 return {}; // Return an empty object if no entries found
             }
@@ -703,76 +702,167 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     function displayDiaryEntries(entries) {
         const diaryContainer = document.getElementById('diaryContainer');
+        const filterContainer = document.getElementById('filterContainer');
+        
         diaryContainer.innerHTML = ''; // Clear existing entries
+        filterContainer.innerHTML = ''; // Clear existing filters
     
         if (!entries || Object.keys(entries).length === 0) {
             diaryContainer.innerHTML = `<p>No diary entries found.</p>`;
             return;
         }
     
+        // Create and append filter elements
+        const yearFilter = document.createElement('select');
+        yearFilter.id = 'yearFilter';
+        yearFilter.innerHTML = `<option value="all">All Years</option>`;
+        yearFilter.style.marginRight = '15px'; // Add space between filters
+
+        const monthFilter = document.createElement('select');
+        monthFilter.id = 'monthFilter';
+        monthFilter.innerHTML = `<option value="all">All Months</option>`;
+        monthFilter.style.marginLeft = '5px'; // Add space after "Month: "
+
+        // Append filters to the container
+        filterContainer.appendChild(document.createTextNode("Year: "));
+        filterContainer.appendChild(yearFilter);
+        filterContainer.appendChild(document.createTextNode(" Month: "));
+        filterContainer.appendChild(monthFilter);
+        filterContainer.appendChild(document.createElement('br')); // Line break for spacing
+
+        // Optional: Add bottom margin for more spacing
+        filterContainer.style.marginBottom = '15px';
+    
+        // Populate Year dropdown
         const years = Object.keys(entries).sort((a, b) => b - a);
-    
         years.forEach(year => {
-            // Year section - outside of the flex container
-            const yearDiv = document.createElement('div');
-            yearDiv.classList.add('year');
-            yearDiv.innerHTML = `<br><hr><h1 class="year-title">${year}</h1><br>`;
-            diaryContainer.appendChild(yearDiv);
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearFilter.appendChild(option);
+        });
     
-            const months = Object.keys(entries[year]).sort((a, b) => b - a);
+        // Populate Month dropdown (1-12)
+        for (let i = 1; i <= 12; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = getMonthName(i);
+            monthFilter.appendChild(option);
+        }
     
-            months.forEach(month => {
-                // Month-Year section - below the year title but above the entries
-                const monthYearTitle = document.createElement('div');
-                monthYearTitle.classList.add('month-year-title');
-                monthYearTitle.innerHTML = `<h3>${getMonthName(month)} ${year}</h3>`;
-                diaryContainer.appendChild(monthYearTitle);
+        // Function to update displayed entries based on filters
+        function applyFilters() {
+            const selectedYear = yearFilter.value;
+            const selectedMonth = monthFilter.value;
     
-                // Container for entries of that particular month (flexbox applied here)
-                const flexContainer = document.createElement('div');
-                flexContainer.classList.add('flex-container'); // Flex container for entries
-                diaryContainer.appendChild(flexContainer);
+            let filteredEntries = { ...entries };
     
-                const days = entries[year][month].sort((a, b) => a.day - b.day);
+            if (selectedYear !== "all") {
+                filteredEntries = { [selectedYear]: filteredEntries[selectedYear] || {} };
+            }
     
-                days.forEach(entry => {
-                    const entryDiv = document.createElement('div');
-                    entryDiv.classList.add('entry-box');
-                    entryDiv.innerHTML = `
-                        <div class="entry">
-                            <span class="details-date">${year}-${month.toString().padStart(2, '0')}-${entry.day.toString().padStart(2, '0')}
-                            &nbsp&nbsp&nbsp<button class="details-btn" data-year="${year}" data-month="${month}" data-day="${entry.day}">Details</button></span>
-                        </div>
-                    `;
-                    flexContainer.appendChild(entryDiv);
+            if (selectedMonth !== "all") {
+                Object.keys(filteredEntries).forEach(year => {
+                    filteredEntries[year] = { [selectedMonth]: filteredEntries[year][selectedMonth] || [] };
+                });
+            }
+    
+            renderEntries(filteredEntries);
+        }
+    
+        // Attach event listeners to filters
+        yearFilter.addEventListener('change', applyFilters);
+        monthFilter.addEventListener('change', applyFilters);
+    
+        // Function to render the filtered entries
+        function renderEntries(filteredEntries) {
+            diaryContainer.innerHTML = ''; // Clear before rendering
+        
+            if (!filteredEntries || Object.keys(filteredEntries).length === 0) {
+                diaryContainer.innerHTML = `<p>No diary entries found.</p>`;
+                return;
+            }
+        
+            Object.keys(filteredEntries).sort((a, b) => b - a).forEach(year => {
+                const yearDiv = document.createElement('div');
+                yearDiv.classList.add('year');
+                yearDiv.innerHTML = `<hr><h1 class="year-title">${year}</h1><br>`;
+                diaryContainer.appendChild(yearDiv);
+        
+                const months = Object.keys(filteredEntries[year]).sort((a, b) => b - a);
+                if (months.length === 0) {
+                    // Show message if no entries exist for the selected year
+                    const noEntriesText = document.createElement('p');
+                    noEntriesText.textContent = "No existing diary for this selection";
+                    noEntriesText.style.fontStyle = "italic";
+                    noEntriesText.style.color = "gray";
+                    noEntriesText.style.marginBottom = "10px";
+                    yearDiv.appendChild(noEntriesText);
+                    return;
+                }
+        
+                months.forEach(month => {
+                    const monthYearTitle = document.createElement('div');
+                    monthYearTitle.classList.add('month-year-title');
+                    monthYearTitle.innerHTML = `<h3>${getMonthName(month)} ${year}</h3>`;
+                    diaryContainer.appendChild(monthYearTitle);
+        
+                    const flexContainer = document.createElement('div');
+                    flexContainer.classList.add('flex-container');
+                    diaryContainer.appendChild(flexContainer);
+        
+                    const days = filteredEntries[year][month].sort((a, b) => a.day - b.day);
+        
+                    if (days.length === 0) {
+                        // Show message if no entries exist for the selected month
+                        const noEntriesText = document.createElement('p');
+                        noEntriesText.textContent = "No existing diary for this selection";
+                        noEntriesText.style.fontStyle = "italic";
+                        noEntriesText.style.color = "gray";
+                        noEntriesText.style.marginBottom = "10px";
+                        monthYearTitle.appendChild(noEntriesText);
+                        return;
+                    }
+        
+                    days.forEach(entry => {
+                        const entryDiv = document.createElement('div');
+                        entryDiv.classList.add('entry-box');
+                        entryDiv.innerHTML = `
+                            <div class="entry">
+                                <span class="details-date">${year}-${month.toString().padStart(2, '0')}-${entry.day.toString().padStart(2, '0')}
+                                &nbsp&nbsp&nbsp<button class="details-btn" data-year="${year}" data-month="${month}" data-day="${entry.day}">Details</button></span>
+                            </div>
+                        `;
+                        flexContainer.appendChild(entryDiv);
+                    });
                 });
             });
-        });
-    
-        // Add event listeners to details buttons
-        document.querySelectorAll('.details-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const year = this.getAttribute('data-year');
-                const month = this.getAttribute('data-month');
-                const day = this.getAttribute('data-day');
-    
-                console.log('Button clicked:', { year, month, day });
-    
-                const entry = entries[year]?.[month]?.find(e => e.day === parseInt(day));
-                if (entry) {
-                    displayDetails(entry, year, month, day);
-                } else {
-                    console.error('Entry not found:', { year, month, day });
-                }
+        
+            // Re-attach event listeners for the details buttons
+            document.querySelectorAll('.details-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const year = this.getAttribute('data-year');
+                    const month = this.getAttribute('data-month');
+                    const day = this.getAttribute('data-day');
+        
+                    console.log('Button clicked:', { year, month, day });
+        
+                    const entry = entries[year]?.[month]?.find(e => e.day === parseInt(day));
+                    if (entry) {
+                        displayDetails(entry, year, month, day);
+                    } else {
+                        console.error('Entry not found:', { year, month, day });
+                    }
+                });
             });
-        });
+        }
+        
+    
+        // Initial render of all entries
+        renderEntries(entries);
     }
     
-    
-
-    
-
-    // Utility to get month name from number
+    // Utility function to get month name from number
     function getMonthName(monthNumber) {
         const monthNames = [
             'January', 'February', 'March', 'April', 'May', 'June',
@@ -780,7 +870,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         ];
         return monthNames[monthNumber - 1];
     }
-
+    
     // Placeholder function to get the current logged-in user's UID
     async function getCurrentUserId() {
         return new Promise((resolve, reject) => {
